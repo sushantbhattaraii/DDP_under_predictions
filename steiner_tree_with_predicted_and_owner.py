@@ -22,7 +22,7 @@ def steiner_tree(G, steiner_vertices):
     # Convert steiner_vertices to a set for quick membership checks
     S = set(steiner_vertices)
 
-    # Step 1: Construct the complete graph G1 on the Steiner vertices,
+    # Step 1: Construct the complete graph G1 on the Steiner vertices, using Dijkstra's algorithm
     #         with edge weights given by shortest path distances in G.
     #         We'll use all-pairs shortest paths restricted to S.
     #         dist[u][v] = shortest distance from u to v in G.
@@ -36,7 +36,7 @@ def steiner_tree(G, steiner_vertices):
             if u < v:
                 G1.add_edge(u, v, weight=dist[u][v])
 
-    # Step 2: Find a Minimum Spanning Tree (T1) of G1.
+    # Step 2: Find a Minimum Spanning Tree (T1) of G1 using Kruskal's algo.
     T1 = nx.minimum_spanning_tree(G1, weight='weight')
 
     # Step 3: Construct G_s by replacing each edge (u, v) in T1 with
@@ -53,7 +53,7 @@ def steiner_tree(G, steiner_vertices):
             w = G[a][b]['weight']
             G_s.add_edge(a, b, weight=w)
 
-    # Step 4: Find a Minimum Spanning Tree (T_s) of G_s.
+    # Step 4: Find a Minimum Spanning Tree (T_s) of G_s using Kruskal.
     T_s = nx.minimum_spanning_tree(G_s, weight='weight')
 
     # Step 5: Prune leaves in T_s that are not Steiner vertices.
@@ -115,7 +115,7 @@ if __name__ == "__main__":
     # G_example.add_weighted_edges_from(edges)
 
     # Or, Load the graph from a GraphML file
-    graphml_file = '.\\graphs\\'+'64random_diameter3test.edgelist'
+    graphml_file = '.\\graphs\\'+'10random_diameter5test.edgelist'
     G_example = nx.read_graphml(graphml_file)
 
     pos = nx.spring_layout(G_example)
@@ -131,18 +131,18 @@ if __name__ == "__main__":
     #     print(f"Node: {node}, Data Type: {type(node)}")
 
     # Suppose Steiner vertices S are {1, 3, 5, 4}
-    # S_example = {7, 3, 1}
+    # S_example = {1, 2, 3, 4}
 
     # Or, take a random fraction of total nodes (say) 1/4th of the total nodes
     
     # Choose the Steiner set S = Vp ∪ {owner}
-    S, Vp, owner = choose_steiner_set(G_example)
+    S_example, Vp, owner = choose_steiner_set(G_example)
     print("Randomly chosen Predicted Vertices (Vp):", Vp)
     print("Owner node:", owner)
-    print("Steiner set S:", S)
+    print("Steiner set S:", S_example)
 
     # Compute Steiner tree
-    T_H_example = steiner_tree(G_example, S)
+    T_H_example = steiner_tree(G_example, S_example)
 
     # Print edges of the resulting Steiner tree
     print("Steiner Tree edges:")
