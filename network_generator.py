@@ -18,7 +18,7 @@ from networkx.readwrite import json_graph
 # k = 20
 # num_nodes = 128
 # k = 17
-num_nodes = 10
+num_nodes = 64
 k = 15
 
 watts_strogatz_prob = 0.03
@@ -29,7 +29,7 @@ internet_graph_seed = None  # optional
 
 def add_edge_weights(graph):
     for e in graph.edges:
-        w = 1
+        w = randint(1, 10)
         graph.add_edge(e[0], e[1], weight=w)
 
 

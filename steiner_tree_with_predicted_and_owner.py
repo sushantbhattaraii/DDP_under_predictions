@@ -115,7 +115,7 @@ if __name__ == "__main__":
     # G_example.add_weighted_edges_from(edges)
 
     # Or, Load the graph from a GraphML file
-    graphml_file = '.\\graphs\\10random_diameter3test.edgelist'
+    graphml_file = '.\\graphs\\'+'64random_diameter3test.edgelist'
     G_example = nx.read_graphml(graphml_file)
 
     pos = nx.spring_layout(G_example)
