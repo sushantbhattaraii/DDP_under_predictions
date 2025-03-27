@@ -76,13 +76,14 @@ def steiner_tree(G, steiner_vertices):
 
 def choose_steiner_set(G):
     """
-    Randomly choose Vp (1/3 of all nodes) as Steiner points,
+    Randomly choose Vp (1/4 of all nodes) as predicted nodes,
     and then choose one additional 'owner' node not in Vp.
     Return the set S = Vp ∪ {owner}, along with Vp and owner.
     """
+    G = nx.relabel_nodes(G, lambda x: int(x))
     nodes = list(G.nodes())
     total_nodes = len(nodes)
-    vp_size = total_nodes // 3  # using integer division for 1/3 of nodes
+    vp_size = total_nodes // 4  # using integer division for 1/3 of nodes
     Vp = set(random.sample(nodes, vp_size))
     
     # Choose an owner node that is not in Vp
@@ -126,19 +127,24 @@ if __name__ == "__main__":
 
     print("Nodes in G_example:", list(G_example.nodes()))
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
-    for node in G_example.nodes:
-        print(f"Node: {node}, Data Type: {type(node)}")
+    # for node in G_example.nodes:
+    #     print(f"Node: {node}, Data Type: {type(node)}")
 
     # Suppose Steiner vertices S are {1, 3, 5, 4}
-    S_example = {7, 3, 1}
+    # S_example = {7, 3, 1}
 
     # Or, take a random fraction of total nodes (say) 1/4th of the total nodes
-    # S_example = set(list(G_example.nodes())[:int(len(G_example.nodes())/4)])
+    
+    # Choose the Steiner set S = Vp ∪ {owner}
+    S, Vp, owner = choose_steiner_set(G_example)
+    print("Randomly chosen Predicted Vertices (Vp):", Vp)
+    print("Owner node:", owner)
+    print("Steiner set S:", S)
 
     # Compute Steiner tree
-    T_H_example = steiner_tree(G_example, S_example)
+    T_H_example = steiner_tree(G_example, S)
 
     # Print edges of the resulting Steiner tree
     print("Steiner Tree edges:")
     for (u, v, data) in T_H_example.edges(data=True):
-        print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")
+        print(f"{u} - {v}")

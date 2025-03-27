@@ -104,7 +104,7 @@ def main():
     
     # Choose the Steiner set S = Vp ∪ {owner}
     S, Vp, owner = choose_steiner_set(G)
-    print("Randomly chosen Steiner points (Vp):", Vp)
+    print("Randomly chosen Predicted Vertices (Vp):", Vp)
     print("Owner node:", owner)
     print("Steiner set S:", S)
     
