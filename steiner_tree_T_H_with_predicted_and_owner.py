@@ -115,7 +115,7 @@ if __name__ == "__main__":
     # G_example.add_weighted_edges_from(edges)
 
     # Or, Load the graph from a GraphML file
-    graphml_file = '.\\graphs\\'+'10random_diameter5test.edgelist'
+    graphml_file = '.\\graphs\\'+'10random_diameter6test.edgelist'
     G_example = nx.read_graphml(graphml_file)
 
     pos = nx.spring_layout(G_example)
@@ -147,4 +147,4 @@ if __name__ == "__main__":
     # Print edges of the resulting Steiner tree
     print("Steiner Tree edges:")
     for (u, v, data) in T_H_example.edges(data=True):
-        print(f"{u} - {v}")
+        print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")

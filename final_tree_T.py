@@ -1,6 +1,8 @@
 import networkx as nx
 from matplotlib import pyplot as plt
+import random
 from plot_graph import show_graph
+
 
 def steiner_tree(G, steiner_vertices):
     """
@@ -22,7 +24,7 @@ def steiner_tree(G, steiner_vertices):
     # Convert steiner_vertices to a set for quick membership checks
     S = set(steiner_vertices)
 
-    # Step 1: Construct the complete graph G1 on the Steiner vertices,
+    # Step 1: Construct the complete graph G1 on the Steiner vertices, using Dijkstra's algorithm
     #         with edge weights given by shortest path distances in G.
     #         We'll use all-pairs shortest paths restricted to S.
     #         dist[u][v] = shortest distance from u to v in G.
@@ -36,7 +38,7 @@ def steiner_tree(G, steiner_vertices):
             if u < v:
                 G1.add_edge(u, v, weight=dist[u][v])
 
-    # Step 2: Find a Minimum Spanning Tree (T1) of G1.
+    # Step 2: Find a Minimum Spanning Tree (T1) of G1 using Kruskal's algo.
     T1 = nx.minimum_spanning_tree(G1, weight='weight')
 
     # Step 3: Construct G_s by replacing each edge (u, v) in T1 with
@@ -53,7 +55,7 @@ def steiner_tree(G, steiner_vertices):
             w = G[a][b]['weight']
             G_s.add_edge(a, b, weight=w)
 
-    # Step 4: Find a Minimum Spanning Tree (T_s) of G_s.
+    # Step 4: Find a Minimum Spanning Tree (T_s) of G_s using Kruskal.
     T_s = nx.minimum_spanning_tree(G_s, weight='weight')
 
     # Step 5: Prune leaves in T_s that are not Steiner vertices.
@@ -74,7 +76,27 @@ def steiner_tree(G, steiner_vertices):
     return T_s
 
 
-def augment_tree_with_remaining_vertices(G, T_H):
+def choose_steiner_set(G):
+    """
+    Randomly choose Vp (1/4 of all nodes) as predicted nodes,
+    and then choose one additional 'owner' node not in Vp.
+    Return the set S = Vp ∪ {owner}, along with Vp and owner.
+    """
+    G = nx.relabel_nodes(G, lambda x: int(x))
+    nodes = list(G.nodes())
+    total_nodes = len(nodes)
+    vp_size = total_nodes // 4  # using integer division for 1/3 of nodes
+    Vp = set(random.sample(nodes, vp_size))
+    
+    # Choose an owner node that is not in Vp
+    remaining = set(nodes) - Vp
+    owner = random.choice(list(remaining))
+    
+    S = Vp.union({owner})
+    return S, Vp, owner
+
+
+def augment_steiner_tree_with_remaining_vertices(G, T_H):
     """
     Augments a given Steiner tree T_H by adding the remaining vertices of G,
     connecting each vertex (from V \ V(T_H)) to the current tree T1 via the shortest path.
@@ -150,10 +172,9 @@ if __name__ == "__main__":
     # ]
     # G_example.add_weighted_edges_from(edges)
 
-    # Load the graph from a GraphML file
-    graphml_file = '.\\graphs\\10random_diameter6test.edgelist'
+    # Or, Load the graph from a GraphML file
+    graphml_file = '.\\graphs\\'+'10random_diameter6test.edgelist'
     G_example = nx.read_graphml(graphml_file)
-    G_example = nx.relabel_nodes(G_example, lambda x: int(x))
 
     pos = nx.spring_layout(G_example)
     edge_weight = nx.get_edge_attributes(G_example, 'weight')
@@ -162,18 +183,35 @@ if __name__ == "__main__":
     plt.title("GraphML Graph Visualization")
     plt.show()
 
-    # Suppose Steiner vertices (predicted nodes) S are {1, 3, 5, 4}
-    S_example = {1, 2, 3, 4}
+    print("Nodes in G_example:", list(G_example.nodes()))
+    G_example = nx.relabel_nodes(G_example, lambda x: int(x))
+    # for node in G_example.nodes:
+    #     print(f"Node: {node}, Data Type: {type(node)}")
 
-    # Compute Steiner tree Th
-    T_H_example = steiner_tree(G_example, S_example)
+    # Suppose Steiner vertices S are {1, 3, 5, 4}
+    # S_example = {1, 2, 3, 4}
+
+    # Or, take a random fraction of total nodes (say) 1/4th of the total nodes
+    
+    # Choose the Steiner set S = Vp ∪ {owner}
+    S_example, Vp, owner = choose_steiner_set(G_example)
+    print("Randomly chosen Predicted Vertices (Vp):", Vp)
+    print("Owner node:", owner)
+    print("Steiner set S:", S_example)
+
+    # Compute Steiner tree
+    T_H = steiner_tree(G_example, S_example)
+
+    # Print edges of the resulting Final tree
+    print("Final Tree edges:")
+    for (u, v, data) in T_H.edges(data=True):
+        print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")
 
     # Compute Final tree T
-    T = augment_tree_with_remaining_vertices(G_example, T_H_example)
-
+    T = augment_steiner_tree_with_remaining_vertices(G_example, T_H)
     show_graph(T)
 
-    # Print edges of the resulting final tree
-    print("Steiner Tree edges:")
+    # Print edges of the resulting Final tree
+    print("Final Tree edges:")
     for (u, v, data) in T.edges(data=True):
         print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")
