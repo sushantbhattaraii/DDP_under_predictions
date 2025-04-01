@@ -1,5 +1,6 @@
 import networkx as nx
 from matplotlib import pyplot as plt
+from plot_graph import show_graph
 
 def steiner_tree(G, steiner_vertices):
     """
@@ -76,26 +77,27 @@ def steiner_tree(G, steiner_vertices):
 if __name__ == "__main__":
     # Example usage:
     # Create a simple weighted graph
-    G_example = nx.Graph()
-    edges = [
-        (1, 2, 10),
-        (1, 9, 1),
-        (2, 6, 1),
-        (2, 3, 8),
-        (3, 5, 2),
-        (3, 4, 9),
-        (4, 5, 2),
-        (5, 6, 1),
-        (5, 9, 1),
-        (6, 7, 1),
-        (7, 8, 0.5),
-        (8, 9, 0.5)
-    ]
-    G_example.add_weighted_edges_from(edges)
+    # G_example = nx.Graph()
+    # edges = [
+    #     (1, 2, 10),
+    #     (1, 9, 1),
+    #     (2, 6, 1),
+    #     (2, 3, 8),
+    #     (3, 5, 2),
+    #     (3, 4, 9),
+    #     (4, 5, 2),
+    #     (5, 6, 1),
+    #     (5, 9, 1),
+    #     (6, 7, 1),
+    #     (7, 8, 0.5),
+    #     (8, 9, 0.5)
+    # ]
+    # G_example.add_weighted_edges_from(edges)
 
     # Load the graph from a GraphML file
-    # graphml_file = '.\\graphs\\10random_diameter3test.edgelist'
-    # G_example = nx.read_graphml(graphml_file)
+    graphml_file = '.\\graphs\\10random_diameter6test.edgelist'
+    G_example = nx.read_graphml(graphml_file)
+    G_example = nx.relabel_nodes(G_example, lambda x: int(x))
 
     pos = nx.spring_layout(G_example)
     edge_weight = nx.get_edge_attributes(G_example, 'weight')
@@ -104,13 +106,15 @@ if __name__ == "__main__":
     plt.title("GraphML Graph Visualization")
     plt.show()
 
-    # Suppose Steiner vertices S are {1, 3, 5, 4}
+    # Suppose Steiner vertices (predicted nodes) S are {1, 3, 5, 4}
     S_example = {1, 2, 3, 4}
 
-    # Compute Steiner tree
+    # Compute Steiner tree T_H
     T_H_example = steiner_tree(G_example, S_example)
 
-    # Print edges of the resulting Steiner tree
+    show_graph(T_H_example)
+
+    # Print edges of the resulting final tree
     print("Steiner Tree edges:")
     for (u, v, data) in T_H_example.edges(data=True):
         print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")
