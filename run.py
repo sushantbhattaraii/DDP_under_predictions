@@ -3,11 +3,16 @@ from final_tree_T import *
 
 if __name__ == "__main__":
 
+
+    # fraction of nodes to be chosen as Vp
+    global fraction
+    fraction = float(1/4)
+
     graphml_file = '.\\graphs\\'+'10random_diameter6test.edgelist'
     G_example = nx.read_graphml(graphml_file)
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
 
-    S_example, Vp, owner = choose_steiner_set(G_example)
+    S_example, Vp, owner = choose_steiner_set(G_example, fraction)
     print("Randomly chosen Predicted Vertices (Vp):", Vp)
     print("Owner node:", owner)
     print("Steiner set S:", S_example)
@@ -37,11 +42,12 @@ if __name__ == "__main__":
 
     print("Total vertices (V):", V)
     print("Owner node:", owner)
+    print("Fraction used:", fraction)
     print("Predicted vertices (Vp):", Vp)
     print("Requesting nodes (Q):", Q)
     print("\n--- Move Operations ---")
 
-    
+
     
     
 

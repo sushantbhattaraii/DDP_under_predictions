@@ -4,6 +4,7 @@ import random
 from plot_graph import show_graph
 
 
+
 def steiner_tree(G, steiner_vertices):
     """
     Constructs a Steiner Tree T_H for the undirected, weighted graph G
@@ -86,7 +87,7 @@ def choose_steiner_set(G, fraction):
     nodes = list(G.nodes())
     total_nodes = len(nodes)
     vp_size = total_nodes * fraction # Fraction of nodes to be chosen as Vp
-    Vp = set(random.sample(nodes, vp_size))
+    Vp = set(random.sample(nodes, int(vp_size)))
     
     # Choose an owner node that is not in Vp
     remaining = set(nodes) - Vp
@@ -172,8 +173,7 @@ if __name__ == "__main__":
     # ]
     # G_example.add_weighted_edges_from(edges)
 
-    # fraction of nodes to be chosen as Vp
-    fraction = float(1/4)
+    
     
     # Or, Load the graph from a GraphML file
     graphml_file = '.\\graphs\\'+'10random_diameter6test.edgelist'
