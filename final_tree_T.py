@@ -76,7 +76,7 @@ def steiner_tree(G, steiner_vertices):
     return T_s
 
 
-def choose_steiner_set(G):
+def choose_steiner_set(G, fraction):
     """
     Randomly choose Vp (1/4 of all nodes) as predicted nodes,
     and then choose one additional 'owner' node not in Vp.
@@ -85,7 +85,7 @@ def choose_steiner_set(G):
     G = nx.relabel_nodes(G, lambda x: int(x))
     nodes = list(G.nodes())
     total_nodes = len(nodes)
-    vp_size = total_nodes // 4  # using integer division for 1/3 of nodes
+    vp_size = total_nodes * fraction # Fraction of nodes to be chosen as Vp
     Vp = set(random.sample(nodes, vp_size))
     
     # Choose an owner node that is not in Vp
@@ -172,6 +172,9 @@ if __name__ == "__main__":
     # ]
     # G_example.add_weighted_edges_from(edges)
 
+    # fraction of nodes to be chosen as Vp
+    fraction = float(1/4)
+    
     # Or, Load the graph from a GraphML file
     graphml_file = '.\\graphs\\'+'10random_diameter6test.edgelist'
     G_example = nx.read_graphml(graphml_file)
@@ -194,7 +197,7 @@ if __name__ == "__main__":
     # Or, take a random fraction of total nodes (say) 1/4th of the total nodes
     
     # Choose the Steiner set S = Vp ∪ {owner}
-    S_example, Vp, owner = choose_steiner_set(G_example)
+    S_example, Vp, owner = choose_steiner_set(G_example, fraction)
     print("Randomly chosen Predicted Vertices (Vp):", Vp)
     print("Owner node:", owner)
     print("Steiner set S:", S_example)
