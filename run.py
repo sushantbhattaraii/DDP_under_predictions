@@ -83,11 +83,14 @@ def publish(T, o, root, parent, link_):
     ui = parent[u]
     
     # Climb up the tree until we reach the root
-    while ui is not None and ui != root:
+    while True:
         link_[ui] = u
         # Move up one level
         u = ui
         ui = parent[u]
+        # print("U->", u, "ui->",ui)
+        if( u == root):
+            break
     # The loop stops when ui == root or ui == None.
     # By the pseudocode, we do NOT set link(root) in the final step.
 
@@ -137,7 +140,7 @@ if __name__ == "__main__":
     print("Requesting nodes (Q):", Q)
     print("\n--- Move Operations ---")
 
-    root = owner
+    root = 4
     print("Root node of the final tree:", root)
 
     parent = build_parent_dict(T, root)
