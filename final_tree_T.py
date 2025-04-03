@@ -149,7 +149,7 @@ def augment_steiner_tree_with_remaining_vertices(G, T_H):
         current_nodes.update(path)
         # Update the remaining nodes.
         remaining_nodes = set(G.nodes()) - current_nodes
-        
+
     return T_final
 
 
@@ -211,7 +211,7 @@ if __name__ == "__main__":
         print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")
 
     # Compute Final tree T
-    T = augment_steiner_tree_with_remaining_vertices(G_example, T_H)
+    T, root = augment_steiner_tree_with_remaining_vertices(G_example, T_H)
     show_graph(T)
 
     # Print edges of the resulting Final tree
