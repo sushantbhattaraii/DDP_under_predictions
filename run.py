@@ -89,7 +89,7 @@ def publish(T, o, root, parent, link_):
         u = ui
         ui = parent[u]
         # print("U->", u, "ui->",ui)
-        if( u == root):
+        if( ui is not None and u == root):
             break
     # The loop stops when ui == root or ui == None.
     # By the pseudocode, we do NOT set link(root) in the final step.
