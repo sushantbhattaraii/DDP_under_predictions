@@ -1,5 +1,6 @@
 from collections import defaultdict, deque
 from final_tree_T import *
+from tree_center import find_tree_center
 
 
 
@@ -80,14 +81,16 @@ def publish(T, o, root, parent, link_):
     we set link(ui) = child, where 'child' is the node from which the publish message arrived.
     """
     u = o
-    ui = parent[u]
+    # ui = parent[u]
+    ui = parent.get(u, None)  # Use .get() to avoid KeyError
     
     # Climb up the tree until we reach the root
     while True:
         link_[ui] = u
         # Move up one level
         u = ui
-        ui = parent[u]
+        # ui = parent[u]
+        ui = parent.get(u, None)  # Use .get() to avoid KeyError
         # print("U->", u, "ui->",ui)
         if( ui is not None and u == root):
             break
@@ -96,8 +99,6 @@ def publish(T, o, root, parent, link_):
 
 
 if __name__ == "__main__":
-
-
     # fraction of nodes to be chosen as Vp
     global fraction
     fraction = float(1/4)
@@ -140,7 +141,10 @@ if __name__ == "__main__":
     print("Requesting nodes (Q):", Q)
     print("\n--- Move Operations ---")
 
-    root = 4
+    centers = find_tree_center(T)
+    print("Center(s) of the tree:", centers)
+
+    root = centers[0]
     print("Root node of the final tree:", root)
 
     parent = build_parent_dict(T, root)
