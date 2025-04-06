@@ -85,14 +85,14 @@ def publish(T, o, root, parent, link_):
     ui = parent.get(u, None)  # Use .get() to avoid KeyError
     
     # Climb up the tree until we reach the root
-    while True:
+    while ui is not None:
         link_[ui] = u
         # Move up one level
         u = ui
         # ui = parent[u]
         ui = parent.get(u, None)  # Use .get() to avoid KeyError
         # print("U->", u, "ui->",ui)
-        if( ui is not None and u == root):
+        if(u == root):
             break
     # The loop stops when ui == root or ui == None.
     # By the pseudocode, we do NOT set link(root) in the final step.
