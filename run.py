@@ -122,6 +122,11 @@ if __name__ == "__main__":
 
     # Compute Final tree T
     T = augment_steiner_tree_with_remaining_vertices(G_example, T_H)
+
+    # verifying the edge weights by printing them
+    # for u, v, weight in T.edges(data='weight'):
+    #     print(f"Edge ({u}, {v}) has weight: {weight}")
+
     show_graph(T)
     total_nodes = len(G_example)
 
@@ -178,11 +183,12 @@ if __name__ == "__main__":
     errors = []
     for req, pred in zip(Q, Vp):
         # Using NetworkX to compute the shortest path length in tree T.
-        dist = nx.shortest_path_length(T, source=req, target=pred)
+        dist = nx.shortest_path_length(T, source=req, target=pred, weight='weight')
         error = dist / diameter_of_G
         errors.append(error)
         print(f"\nDistance between request node {req} and predicted node {pred} is {dist}, error = {error:.4f}")
     
+    print("Diameter of G:", diameter_of_G)
     total_error = max(errors) if errors else 0
     print(f"\nOverall error (max_i(distance / diameter_of_G)) = {total_error:.4f}")
 
