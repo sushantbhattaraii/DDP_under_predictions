@@ -18,12 +18,12 @@ from networkx.readwrite import json_graph
 # k = 20
 # num_nodes = 128
 # k = 17
-num_nodes = 10
+num_nodes = 1024
 k = 15
 
 watts_strogatz_prob = 0.03
 
-erdos_renyi_prob = 0.2
+erdos_renyi_prob = 0.02
 internet_graph_seed = None  # optional
 
 
@@ -48,7 +48,9 @@ def get_diameter(graph, weighted = False):
 # write to a file
 def write_to_a_file(graph, param):
     diameter = get_diameter(graph)
-    nx.write_graphml(graph, './graphs/' + str(num_nodes) + str(param) + '_diameter' + str(diameter) + 'test.edgelist')
+    graph_name = './graphs/' + str(num_nodes) + str(param) + '_diameter' + str(diameter) + 'test.edgelist'
+    nx.write_graphml(graph, graph_name)
+    return graph_name
 
 
 def build_random_graph():
@@ -128,8 +130,9 @@ def draw(graph):
 
 def build_graphs():
     random_graph = build_random_graph()
-    write_to_a_file(random_graph, "random")
+    graph_name = write_to_a_file(random_graph, "random")
     draw(random_graph)
+    return graph_name
     # nx.draw(random_graph, with_labels=True)
     # plt.show()  
 

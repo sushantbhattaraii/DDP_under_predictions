@@ -3,6 +3,7 @@ from final_tree_T import *
 from tree_center import find_tree_center
 import random
 import networkx as nx
+import network_generator as my_ng
 
 
 request_queue = defaultdict(deque)
@@ -101,7 +102,9 @@ if __name__ == "__main__":
     global fraction
     fraction = float(1/4)
 
-    graphml_file = '.\\graphs\\'+'10random_diameter6test.edgelist'
+    graph_name = my_ng.build_graphs()
+
+    graphml_file = graph_name
     G_example = nx.read_graphml(graphml_file)
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
 
@@ -127,7 +130,7 @@ if __name__ == "__main__":
     # for u, v, weight in T.edges(data='weight'):
     #     print(f"Edge ({u}, {v}) has weight: {weight}")
 
-    show_graph(T)
+    # show_graph(T)
     total_nodes = len(G_example)
 
     # V is the set of all vertices in the graph G.
@@ -176,9 +179,9 @@ if __name__ == "__main__":
         print(f"\nRequest from node {r} ... ")
         set_links_for_request(r, parent, link_, root)
         
-        print("Updated link_ after request:")
-        for node in sorted(T.nodes()):
-            print(f"  link_[{node}] = {link_[node]}")
+        # print("Updated link_ after request:")
+        # for node in sorted(T.nodes()):
+        #     print(link_)
 
     errors = []
     for req, pred in zip(Q, Vp):

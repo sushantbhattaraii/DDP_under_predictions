@@ -73,7 +73,7 @@ def steiner_tree(G, steiner_vertices):
     nx.draw(T_s, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=500)
     nx.draw_networkx_edge_labels(T_s, pos, edge_labels=edge_weight)
     plt.title("Steiner Tree Visualization")
-    plt.show()
+    # plt.show()
     return T_s
 
 
