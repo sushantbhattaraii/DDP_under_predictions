@@ -105,6 +105,8 @@ if __name__ == "__main__":
     G_example = nx.read_graphml(graphml_file)
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
 
+    diameter_of_G = nx.diameter(G_example)
+
     S_example, Vp, owner = choose_steiner_set(G_example, fraction)
     print("Randomly chosen Predicted Vertices (Vp):", Vp)
     print("Owner node:", owner)
@@ -131,6 +133,8 @@ if __name__ == "__main__":
     available_for_Q = list(set(V) - {owner})
     Q = random.sample(available_for_Q, len(Vp))
 
+
+    error_values = []
 
     print("Total vertices (V):", V)
     print("Owner node:", owner)
@@ -170,6 +174,17 @@ if __name__ == "__main__":
         print("Updated link_ after request:")
         for node in sorted(T.nodes()):
             print(f"  link_[{node}] = {link_[node]}")
+
+    errors = []
+    for req, pred in zip(Q, Vp):
+        # Using NetworkX to compute the shortest path length in tree T.
+        dist = nx.shortest_path_length(T, source=req, target=pred)
+        error = dist / diameter_of_G
+        errors.append(error)
+        print(f"\nDistance between request node {req} and predicted node {pred} is {dist}, error = {error:.4f}")
+    
+    total_error = max(errors) if errors else 0
+    print(f"\nOverall error (max_i(distance / diameter_of_G)) = {total_error:.4f}")
 
 
     
