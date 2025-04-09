@@ -197,7 +197,7 @@ if __name__ == "__main__":
     # Or, take a random fraction of total nodes (say) 1/4th of the total nodes
     
     # Choose the Steiner set S = Vp ∪ {owner}
-    S_example, Vp, owner = choose_steiner_set(G_example, fraction)
+    S_example, Vp, owner = choose_steiner_set(G_example, 0.25)
     print("Randomly chosen Predicted Vertices (Vp):", Vp)
     print("Owner node:", owner)
     print("Steiner set S:", S_example)
