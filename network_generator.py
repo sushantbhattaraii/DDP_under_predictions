@@ -18,12 +18,12 @@ from networkx.readwrite import json_graph
 # k = 20
 # num_nodes = 128
 # k = 17
-num_nodes = 1024
-k = 15
+num_nodes = 512
+# k = 15
 
 watts_strogatz_prob = 0.03
 
-erdos_renyi_prob = 0.02
+erdos_renyi_prob = 0.01
 internet_graph_seed = None  # optional
 
 
@@ -33,21 +33,24 @@ def add_edge_weights(graph):
         graph.add_edge(e[0], e[1], weight=w)
 
 
-def get_diameter(graph, weighted = False):
+def get_diameter(graph, weighted = True):
     if weighted:
         paths_for_diameter = nx.shortest_path_length(graph, weight='weight')
         ecc = nx.eccentricity(graph, sp=dict(paths_for_diameter))
-        diameter = nx.diameter(graph, e=ecc)
+        diameter = nx.diameter(graph, e=ecc, weight='weight')
     else:
         paths_for_diameter = nx.shortest_path_length(graph)
         ecc = nx.eccentricity(graph, sp=dict(paths_for_diameter))
-        diameter = nx.diameter(graph, e=ecc)
+        diameter = nx.diameter(graph, e=ecc, weight='weight')
     return diameter
 
 
 # write to a file
 def write_to_a_file(graph, param):
-    diameter = get_diameter(graph)
+    # diameter = get_diameter(graph)
+    diameter = nx.diameter(graph, weight='weight')
+    print("Diameter of the graph yoo:", diameter)
+    # exit()
     graph_name = './graphs/' + str(num_nodes) + str(param) + '_diameter' + str(diameter) + 'test.edgelist'
     nx.write_graphml(graph, graph_name)
     return graph_name
@@ -56,8 +59,8 @@ def write_to_a_file(graph, param):
 def build_random_graph():
     random_graph = nx.gnp_random_graph(num_nodes, erdos_renyi_prob)
     print(nx.is_connected(random_graph))
-    nx.draw(random_graph, with_labels=True)
-    plt.show()
+    # nx.draw(random_graph, with_labels=True)
+    # plt.show()
 
     if nx.is_connected(random_graph) is False:
         # print("NOT CONNECTED, NEED TO ADD EDGES")
@@ -88,9 +91,9 @@ def build_random_graph():
     assert nx.is_connected(random_graph)
     add_edge_weights(random_graph)
 
-    print(nx.is_connected(random_graph))
-    nx.draw(random_graph, with_labels=True)
-    plt.show()
+    # print(nx.is_connected(random_graph))
+    # nx.draw(random_graph, with_labels=True)
+    # plt.show()
 
     return random_graph
 
@@ -125,16 +128,17 @@ def draw(graph):
     print(graph)
     print(graph.nodes())
     print("THE GRAPH")
-    plt.show()
+    # plt.show()
 
 
 def build_graphs():
     random_graph = build_random_graph()
     graph_name = write_to_a_file(random_graph, "random")
     draw(random_graph)
+    nx.draw(random_graph, with_labels=True)
+    # plt.show()
     return graph_name
-    # nx.draw(random_graph, with_labels=True)
-    # plt.show()  
+      
 
 
 if __name__ == '__main__':

@@ -103,12 +103,13 @@ if __name__ == "__main__":
     fraction = float(1/4)
 
     graph_name = my_ng.build_graphs()
-
     graphml_file = graph_name
+    # graphml_file = '.\\graphs\\250random_diameter74test.edgelist'
     G_example = nx.read_graphml(graphml_file)
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
 
-    diameter_of_G = nx.diameter(G_example)
+    diameter_of_G = nx.diameter(G_example, weight='weight')
+    print("Diameter of G_example:", diameter_of_G)
 
     S_example, Vp, owner = choose_steiner_set(G_example, fraction)
     print("Randomly chosen Predicted Vertices (Vp):", Vp)
@@ -142,7 +143,7 @@ if __name__ == "__main__":
     Q = random.sample(available_for_Q, len(Vp))
 
 
-    error_values = []
+    # error_values = []
 
     print("Total vertices (V):", V)
     print("Owner node:", owner)
@@ -183,17 +184,19 @@ if __name__ == "__main__":
         # for node in sorted(T.nodes()):
         #     print(link_)
 
+    diameter_of_T = nx.diameter(T, weight='weight')
     errors = []
     for req, pred in zip(Q, Vp):
         # Using NetworkX to compute the shortest path length in tree T.
         dist = nx.shortest_path_length(T, source=req, target=pred, weight='weight')
-        error = dist / diameter_of_G
+        error = dist / diameter_of_T
         errors.append(error)
         print(f"\nDistance between request node {req} and predicted node {pred} is {dist}, error = {error:.4f}")
     
     print("Diameter of G:", diameter_of_G)
+    print("Diameter of T:", diameter_of_T)
     total_error = max(errors) if errors else 0
-    print(f"\nOverall error (max_i(distance / diameter_of_G)) = {total_error:.4f}")
+    print(f"\nOverall error (max_i(distance / diameter)) = {total_error:.4f}")
 
 
     
