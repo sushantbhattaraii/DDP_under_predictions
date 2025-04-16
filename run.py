@@ -193,20 +193,31 @@ if __name__ == "__main__":
     print("\nAfter running publish() from owner")
     print("Updated link:", link_)
 
-    stretches = []
+    distances_in_G = []
+    distances_in_T = []
     for r in Q:
         print(f"\nRequest from node {r} ... ")
         d_in_G, d_in_T = set_links_for_request(G_example, T, r, parent, link_, root)
-        stretch_i = float(d_in_T) / d_in_G if d_in_G != 0.0 else float('inf')
-        stretches.append(stretch_i)
-        print(f"\nDistance between request node {r} and owner node in T is {d_in_T}, stretch = {stretch_i:.4f}")
+        # stretch_i = float(d_in_T) / d_in_G if d_in_G != 0.0 else float('inf')
+        distances_in_G.append(d_in_G)
+        distances_in_T.append(d_in_T)
+        # print(f"\nDistance between request node {r} and owner node in T is {d_in_T}, stretch = {stretch_i:.4f}")
 
         # print("Updated link_ after request:")
         # for node in sorted(T.nodes()):
         #     print(link_)
 
-    stretch = max(stretches) if stretches else 0
-    print("\nStretch (max_i(distance_in_T / distance_in_G)) = ", stretch)
+    print("Distances in G: ")
+    print(distances_in_G)
+    print("Distances in T: ")
+    print(distances_in_T)
+    sum_of_distances_in_G = sum(distances_in_G)
+    sum_of_distances_in_T = sum(distances_in_T)
+    stretch = sum_of_distances_in_T / sum_of_distances_in_G if sum_of_distances_in_G != 0 else float('inf')
+    # print("Type of distances in G:", type(distances_in_G))
+    # print("Type of distances in T:", type(distances_in_T))
+    # stretch = max(stretches) if stretches else 0
+    print("\nStretch (sum_of_distance_in_T / sum_of_distance_in_G) = ", stretch)
 
     diameter_of_T = nx.diameter(T, weight='weight')
     errors = []
