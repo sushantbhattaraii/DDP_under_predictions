@@ -6,22 +6,21 @@ def show_graph(G):
     # graphml_file = '.\\graphs\\10random_diameter2test.edgelist'
     # G = nx.read_graphml(graphml_file)
 
-    # Generate a layout for the nodes
+    # Position nodes for better visualization
     pos = nx.spring_layout(G)
 
-    edge_weight = nx.get_edge_attributes(G, 'weight')
+    # Draw nodes
+    nx.draw_networkx_nodes(G, pos)
 
+    # Draw edges
+    nx.draw_networkx_edges(G, pos)
 
-    # Draw the graph with labels
-    nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=500)
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_weight)
+    # Draw edge labels (weights)
+    edge_labels = nx.get_edge_attributes(G, "weight")
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
 
+    # # Draw node labels
+    nx.draw_networkx_labels(G, pos)
 
-    # Add a title to the graph
-    plt.title("GraphML Graph Visualization")
-
-    # Display the graph
+    # Show the plot
     plt.show()
-
-
-

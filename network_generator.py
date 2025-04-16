@@ -18,12 +18,12 @@ from networkx.readwrite import json_graph
 # k = 20
 # num_nodes = 128
 # k = 17
-num_nodes = 512
+num_nodes = 12
 # k = 15
 
 watts_strogatz_prob = 0.03
 
-erdos_renyi_prob = 0.01
+erdos_renyi_prob = 0.2
 internet_graph_seed = None  # optional
 
 
@@ -134,8 +134,8 @@ def draw(graph):
 def build_graphs():
     random_graph = build_random_graph()
     graph_name = write_to_a_file(random_graph, "random")
-    draw(random_graph)
-    nx.draw(random_graph, with_labels=True)
+    # draw(random_graph)
+    # nx.draw(random_graph, with_labels=True)
     # plt.show()
     return graph_name
       

@@ -68,11 +68,11 @@ def steiner_tree(G, steiner_vertices):
         leaves = [n for n in T_s.nodes() if T_s.degree(n) == 1 and n not in S]
 
     # T_s is now the final Steiner tree T_H
-    pos = nx.spring_layout(T_s)
-    edge_weight = nx.get_edge_attributes(T_s, 'weight')
-    nx.draw(T_s, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=500)
-    nx.draw_networkx_edge_labels(T_s, pos, edge_labels=edge_weight)
-    plt.title("Steiner Tree Visualization")
+    # pos = nx.spring_layout(T_s)
+    # edge_weight = nx.get_edge_attributes(T_s, 'weight')
+    # nx.draw(T_s, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=500)
+    # nx.draw_networkx_edge_labels(T_s, pos, edge_labels=edge_weight)
+    # plt.title("Steiner Tree Visualization")
     # plt.show()
     return T_s
 
@@ -179,12 +179,12 @@ if __name__ == "__main__":
     graphml_file = '.\\graphs\\'+'10random_diameter6test.edgelist'
     G_example = nx.read_graphml(graphml_file)
 
-    pos = nx.spring_layout(G_example)
-    edge_weight = nx.get_edge_attributes(G_example, 'weight')
-    nx.draw(G_example, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=500)
-    nx.draw_networkx_edge_labels(G_example, pos, edge_labels=edge_weight)
-    plt.title("GraphML Graph Visualization")
-    plt.show()
+    # pos = nx.spring_layout(G_example)
+    # edge_weight = nx.get_edge_attributes(G_example, 'weight')
+    # nx.draw(G_example, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=500)
+    # nx.draw_networkx_edge_labels(G_example, pos, edge_labels=edge_weight)
+    # plt.title("GraphML Graph Visualization")
+    # plt.show()
 
     print("Nodes in G_example:", list(G_example.nodes()))
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))

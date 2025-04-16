@@ -64,7 +64,7 @@ def publish(T, o, root, parent, link_):
     # By the pseudocode, we do NOT set link(root) in the final step.
 
 
-def set_links_for_request(requesting_node, parent, link_, root):
+def set_links_for_request(G, T, requesting_node, parent, link_, root):
     """
     For a requesting node r:
     1) Set link_[r] = r.
@@ -74,6 +74,17 @@ def set_links_for_request(requesting_node, parent, link_, root):
     """
     # Keep track of the path from requesting_node to root
     path_nodes = []
+
+
+    for node, value in link_.items():
+        if value == node:
+            owner = node
+
+    dist_u_v_in_T = nx.shortest_path_length(T, source=owner, target=requesting_node, weight='weight')
+
+    dist_u_v_in_G = nx.shortest_path_length(G, source=owner, target=requesting_node, weight='weight')
+
+    # stretch = float(dist_u_v_in_T / dist_u_v_in_G)
     
     # Step 1: requesting_node points to itself
     link_[requesting_node] = requesting_node
@@ -95,6 +106,8 @@ def set_links_for_request(requesting_node, parent, link_, root):
         if node not in path_nodes:
             link_[node] = None
 
+    return dist_u_v_in_G, dist_u_v_in_T
+
 
 
 if __name__ == "__main__":
@@ -102,11 +115,15 @@ if __name__ == "__main__":
     global fraction
     fraction = float(1/4)
 
-    graph_name = my_ng.build_graphs()
-    graphml_file = graph_name
-    # graphml_file = '.\\graphs\\250random_diameter74test.edgelist'
+    # graph_name = my_ng.build_graphs()
+    # graphml_file = graph_name
+    graphml_file = '.\\graphs\\250random_diameter73test.edgelist'
     G_example = nx.read_graphml(graphml_file)
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
+
+
+    show_graph(G_example)
+
 
     diameter_of_G = nx.diameter(G_example, weight='weight')
     print("Diameter of G_example:", diameter_of_G)
@@ -131,7 +148,7 @@ if __name__ == "__main__":
     # for u, v, weight in T.edges(data='weight'):
     #     print(f"Edge ({u}, {v}) has weight: {weight}")
 
-    # show_graph(T)
+    show_graph(T)
     total_nodes = len(G_example)
 
     # V is the set of all vertices in the graph G.
@@ -176,27 +193,34 @@ if __name__ == "__main__":
     print("\nAfter running publish() from owner")
     print("Updated link:", link_)
 
+    stretches = []
     for r in Q:
         print(f"\nRequest from node {r} ... ")
-        set_links_for_request(r, parent, link_, root)
-        
+        d_in_G, d_in_T = set_links_for_request(G_example, T, r, parent, link_, root)
+        stretch_i = float(d_in_T) / d_in_G if d_in_G != 0.0 else float('inf')
+        stretches.append(stretch_i)
+        print(f"\nDistance between request node {r} and owner node in T is {d_in_T}, stretch = {stretch_i:.4f}")
+
         # print("Updated link_ after request:")
         # for node in sorted(T.nodes()):
         #     print(link_)
+
+    stretch = max(stretches) if stretches else 0
+    print("\nStretch (max_i(distance_in_T / distance_in_G)) = ", stretch)
 
     diameter_of_T = nx.diameter(T, weight='weight')
     errors = []
     for req, pred in zip(Q, Vp):
         # Using NetworkX to compute the shortest path length in tree T.
-        dist = nx.shortest_path_length(T, source=req, target=pred, weight='weight')
-        error = dist / diameter_of_T
+        dist = nx.shortest_path_length(G_example, source=req, target=pred, weight='weight')
+        error = dist / diameter_of_G
         errors.append(error)
         print(f"\nDistance between request node {req} and predicted node {pred} is {dist}, error = {error:.4f}")
     
     print("Diameter of G:", diameter_of_G)
     print("Diameter of T:", diameter_of_T)
     total_error = max(errors) if errors else 0
-    print(f"\nOverall error (max_i(distance / diameter)) = {total_error:.4f}")
+    print(f"\nOverall error (max_i(distance_in_G / diameter_G)) = {total_error:.4f}")
 
 
     
