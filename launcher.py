@@ -12,17 +12,27 @@ pattern = re.compile(
 
 for frac in fractions:
     print(f"\n=== Running run.py with --fraction {frac:.6f} ===")
-    proc = subprocess.run(
+    proc = subprocess.Popen(
         ["python", "run.py", "--fraction", str(frac)],
-        capture_output=True,
-        text=True,
-        check=True
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True
     )
-    output = proc.stdout.strip()
 
-    # Search for the line containing the line
-    m = pattern.search(output)
-    error_value = float(m.group(1))
+    captured = ""
+
+    # read line by line
+    for line in proc.stdout:
+        print(line, end="")       # echo to your terminal
+        captured += line
+        m = pattern.search(line)
+        if m:
+            error_value = float(m.group(1))
+    
+    proc.wait()
+    if proc.returncode != 0:
+        raise subprocess.CalledProcessError(proc.returncode, proc.args)
+
     errors.append(error_value)
 
 print("Plotting the error graph...")
