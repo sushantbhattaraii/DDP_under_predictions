@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 x = [1, 2, 3, 4, 5]
 y = [2, 4, 1, 8, 7]
 
-plt.figure(figsize=(8, 6))
+plt.figure()
 plt.plot(x, y, marker='o', linestyle='-')
 plt.xlabel('X-axis label')
 plt.ylabel('Y-axis label')

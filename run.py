@@ -5,6 +5,7 @@ import random
 import networkx as nx
 import network_generator as my_ng
 import argparse
+import matplotlib.pyplot as plt
 
 
 request_queue = defaultdict(deque)
@@ -198,6 +199,25 @@ def calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T):
     print("Diameter of T:", diameter_of_T)
     total_error = max(errors) if errors else 0
     print(f"\nOverall error (max_i(distance_in_G / diameter_G)) = {total_error:.4f}")
+    return total_error
+
+
+def plot_error_graph(fraction, errors_to_plot):
+
+    x = fraction
+    y = errors_to_plot
+
+    # print(type(x), type(y))
+    # exit(0)
+
+    plt.figure()
+    plt.plot(x, y, marker='o', linestyle='-')
+    plt.xlabel('Fraction of Predicted Nodes/#of operations')
+    plt.ylabel('Error')
+    plt.title('# of operations vs Error Graph')
+    plt.grid(True)
+    plt.show()
+
 
 def main(fraction):
 
@@ -234,10 +254,13 @@ def main(fraction):
 
     diameter_of_T = nx.diameter(T, weight='weight')
 
-    calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T)
+    total_error = calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T)
+
+    return total_error
 
 
 if __name__ == "__main__":
+    errros_to_plot = []
     p = argparse.ArgumentParser(description="Running the experiment with different fractions of predicted nodes ... ")
     p.add_argument(
         "--fraction",
