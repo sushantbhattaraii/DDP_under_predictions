@@ -18,12 +18,12 @@ from networkx.readwrite import json_graph
 # k = 20
 # num_nodes = 128
 # k = 17
-num_nodes = 12
+num_nodes = 128
 # k = 15
 
 watts_strogatz_prob = 0.03
 
-erdos_renyi_prob = 0.2
+erdos_renyi_prob = 0.01
 internet_graph_seed = None  # optional
 
 

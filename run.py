@@ -4,6 +4,7 @@ from tree_center import find_tree_center
 import random
 import networkx as nx
 import network_generator as my_ng
+import argparse
 
 
 request_queue = defaultdict(deque)
@@ -108,49 +109,16 @@ def set_links_for_request(G, T, requesting_node, parent, link_, root):
 
     return dist_u_v_in_G, dist_u_v_in_T
 
-
-
-if __name__ == "__main__":
-    # fraction of nodes to be chosen as Vp
-    global fraction
-    fraction = float(1/4)
-
+def load_graph():
     # graph_name = my_ng.build_graphs()
     # graphml_file = graph_name
-    graphml_file = '.\\graphs\\250random_diameter73test.edgelist'
+    graphml_file = '.\\graphs\\128random_diameter146test.edgelist'
     G_example = nx.read_graphml(graphml_file)
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
+    return G_example
 
 
-    show_graph(G_example)
-
-
-    diameter_of_G = nx.diameter(G_example, weight='weight')
-    print("Diameter of G_example:", diameter_of_G)
-
-    S_example, Vp, owner = choose_steiner_set(G_example, fraction)
-    print("Randomly chosen Predicted Vertices (Vp):", Vp)
-    print("Owner node:", owner)
-    print("Steiner set S:", S_example)
-
-    # Compute Steiner tree
-    T_H = steiner_tree(G_example, S_example)
-
-    # Print edges of the resulting Final tree
-    print("Final Tree edges:")
-    for (u, v, data) in T_H.edges(data=True):
-        print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")
-
-    # Compute Final tree T
-    T = augment_steiner_tree_with_remaining_vertices(G_example, T_H)
-
-    # verifying the edge weights by printing them
-    # for u, v, weight in T.edges(data='weight'):
-    #     print(f"Edge ({u}, {v}) has weight: {weight}")
-
-    show_graph(T)
-    total_nodes = len(G_example)
-
+def calculate_stretch(G_example, T, Vp, fraction, owner):
     # V is the set of all vertices in the graph G.
     V = list(T.nodes())
 
@@ -159,21 +127,17 @@ if __name__ == "__main__":
     available_for_Q = list(set(V) - {owner})
     Q = random.sample(available_for_Q, len(Vp))
 
-
-    # error_values = []
-
     print("Total vertices (V):", V)
-    print("Owner node:", owner)
     print("Fraction used:", fraction)
     print("Predicted vertices (Vp):", Vp)
     print("Requesting nodes (Q):", Q)
     print("\n--- Move Operations ---")
 
     centers = find_tree_center(T)
-    print("Center(s) of the tree:", centers)
+    # print("Center(s) of the tree:", centers)
 
     root = centers[0]
-    print("Root node of the final tree:", root)
+    print("Root node of the final tree T:", root)
 
     parent = build_parent_dict(T, root)
 
@@ -184,8 +148,8 @@ if __name__ == "__main__":
     # to indicate that the owner points to itself.
     link_[owner] = owner
     
-    print("Initial parent dictionary:", parent)
-    print("Initial link:", link_)
+    # print("Initial parent dictionary:", parent)
+    # print("Initial link:", link_)
     
     # Run publish() from owner = 5
     publish(T, owner, root, parent, link_)
@@ -196,7 +160,7 @@ if __name__ == "__main__":
     distances_in_G = []
     distances_in_T = []
     for r in Q:
-        print(f"\nRequest from node {r} ... ")
+        # print(f"\nRequest from node {r} ... ")
         d_in_G, d_in_T = set_links_for_request(G_example, T, r, parent, link_, root)
         # stretch_i = float(d_in_T) / d_in_G if d_in_G != 0.0 else float('inf')
         distances_in_G.append(d_in_G)
@@ -207,10 +171,10 @@ if __name__ == "__main__":
         # for node in sorted(T.nodes()):
         #     print(link_)
 
-    print("Distances in G: ")
-    print(distances_in_G)
-    print("Distances in T: ")
-    print(distances_in_T)
+    # print("Distances in G: ")
+    # print(distances_in_G)
+    # print("Distances in T: ")
+    # print(distances_in_T)
     sum_of_distances_in_G = sum(distances_in_G)
     sum_of_distances_in_T = sum(distances_in_T)
     stretch = sum_of_distances_in_T / sum_of_distances_in_G if sum_of_distances_in_G != 0 else float('inf')
@@ -218,20 +182,73 @@ if __name__ == "__main__":
     # print("Type of distances in T:", type(distances_in_T))
     # stretch = max(stretches) if stretches else 0
     print("\nStretch (sum_of_distance_in_T / sum_of_distance_in_G) = ", stretch)
+    return Q
 
-    diameter_of_T = nx.diameter(T, weight='weight')
+
+def calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T):
     errors = []
     for req, pred in zip(Q, Vp):
         # Using NetworkX to compute the shortest path length in tree T.
         dist = nx.shortest_path_length(G_example, source=req, target=pred, weight='weight')
         error = dist / diameter_of_G
         errors.append(error)
-        print(f"\nDistance between request node {req} and predicted node {pred} is {dist}, error = {error:.4f}")
+        # print(f"\nDistance between request node {req} and predicted node {pred} is {dist}, error = {error:.4f}")
     
     print("Diameter of G:", diameter_of_G)
     print("Diameter of T:", diameter_of_T)
     total_error = max(errors) if errors else 0
     print(f"\nOverall error (max_i(distance_in_G / diameter_G)) = {total_error:.4f}")
+
+def main(fraction):
+
+    G_example = load_graph()
+
+    # show_graph(G_example)
+
+    diameter_of_G = nx.diameter(G_example, weight='weight')
+    print("Diameter of G_example:", diameter_of_G)
+
+    S_example, Vp, owner = choose_steiner_set(G_example, fraction)
+    print("Randomly chosen Predicted Vertices (Vp):", Vp)
+    print("Owner node:", owner)
+    # print("Steiner set S:", S_example)
+
+    # Compute Steiner tree
+    T_H = steiner_tree(G_example, S_example)
+
+    # Print edges of the resulting Final tree
+    # print("Final Tree edges:")
+    # for (u, v, data) in T_H.edges(data=True):
+    #     print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")
+
+    # Compute Final tree T
+    T = augment_steiner_tree_with_remaining_vertices(G_example, T_H)
+
+    # verifying the edge weights by printing them
+    # for u, v, weight in T.edges(data='weight'):
+    #     print(f"Edge ({u}, {v}) has weight: {weight}")
+
+    # show_graph(T)
+
+    Q = calculate_stretch(G_example, T, Vp, fraction, owner)
+
+    diameter_of_T = nx.diameter(T, weight='weight')
+
+    calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T)
+
+
+if __name__ == "__main__":
+    p = argparse.ArgumentParser(description="Running the experiment with different fractions of predicted nodes ... ")
+    p.add_argument(
+        "--fraction",
+        type=float,
+        required=True,
+        help="The fraction of nodes to pick as Vp (e.g. 0.0625, 0.125, 0.25, 0.5)"
+    )
+    args = p.parse_args()
+    main(args.fraction)
+
+    
 
 
     
