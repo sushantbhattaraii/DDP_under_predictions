@@ -3,7 +3,7 @@ import subprocess
 from run import plot_error_graph
 
 # The four fraction values
-fractions = [1/32, 1/16, 1/8, 1/4]
+fractions = [1/32, 1/16, 1/8, 1/4, 1/2]
 errors = []
 
 pattern = re.compile(

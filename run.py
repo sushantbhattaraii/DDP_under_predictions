@@ -182,7 +182,9 @@ def calculate_stretch(G_example, T, Vp, fraction, owner):
     # print("Type of distances in G:", type(distances_in_G))
     # print("Type of distances in T:", type(distances_in_T))
     # stretch = max(stretches) if stretches else 0
-    print("\nStretch (sum_of_distance_in_T / sum_of_distance_in_G) = ", stretch)
+    GREEN = "\033[92m"
+    RESET = "\033[0m"
+    print(f"{GREEN}\nStretch (sum_of_distance_in_T / sum_of_distance_in_G) = {stretch}{RESET}")
     return Q
 
 
@@ -198,7 +200,9 @@ def calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T):
     print("Diameter of G:", diameter_of_G)
     print("Diameter of T:", diameter_of_T)
     total_error = max(errors) if errors else 0
-    print(f"\nOverall error (max_i(distance_in_G / diameter_G)) = {total_error:.4f}")
+    RED = "\033[91m"
+    RESET = "\033[0m"
+    print(f"{RED}\nOverall error (max_i(distance_in_G / diameter_G)) = {total_error:.4f}{RESET}")
     return total_error
 
 
