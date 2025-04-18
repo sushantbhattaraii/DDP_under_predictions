@@ -1,13 +1,18 @@
 import re
 import subprocess
-from run import plot_error_graph
+from plot_graph import plot_error_graph
 
 # The four fraction values
 fractions = [1/32, 1/16, 1/8, 1/4, 1/2]
 errors = []
+nodes_count = []
 
 pattern = re.compile(
     r"Overall error \(max_i\(distance_in_G / diameter_G\)\) =\s*([0-9.+\-eE]+)"
+)
+
+pattern2 = re.compile(
+    r"Total \# of vertices \(n\):\s*([0-9.+\-eE]+)"
 )
 
 for frac in fractions:
@@ -26,15 +31,21 @@ for frac in fractions:
         print(line, end="")       # echo to your terminal
         captured += line
         m = pattern.search(line)
+        m2 = pattern2.search(line)
         if m:
             error_value = float(m.group(1))
+        if m2:
+            num_nodes = int(m2.group(1))
     
     proc.wait()
     if proc.returncode != 0:
         raise subprocess.CalledProcessError(proc.returncode, proc.args)
 
     errors.append(error_value)
+    nodes_count.append(num_nodes)
 
 print("Plotting the error graph...")
 
-plot_error_graph(fractions, errors)
+filename = str(nodes_count[0])+"nodes_error_graph.png"
+
+plot_error_graph(fractions, errors, filename)

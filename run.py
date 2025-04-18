@@ -113,7 +113,7 @@ def set_links_for_request(G, T, requesting_node, parent, link_, root):
 def load_graph():
     # graph_name = my_ng.build_graphs()
     # graphml_file = graph_name
-    graphml_file = '.\\graphs\\128random_diameter146test.edgelist'
+    graphml_file = '.\\graphs\\1024random_diameter24test.edgelist'
     G_example = nx.read_graphml(graphml_file)
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
     return G_example
@@ -128,6 +128,7 @@ def calculate_stretch(G_example, T, Vp, fraction, owner):
     available_for_Q = list(set(V) - {owner})
     Q = random.sample(available_for_Q, len(Vp))
 
+    print("Total # of vertices (n): ", len(V))
     print("Total vertices (V):", V)
     print("Fraction used:", fraction)
     print("Predicted vertices (Vp):", Vp)
@@ -204,23 +205,6 @@ def calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T):
     RESET = "\033[0m"
     print(f"{RED}\nOverall error (max_i(distance_in_G / diameter_G)) = {total_error:.4f}{RESET}")
     return total_error
-
-
-def plot_error_graph(fraction, errors_to_plot):
-
-    x = fraction
-    y = errors_to_plot
-
-    # print(type(x), type(y))
-    # exit(0)
-
-    plt.figure()
-    plt.plot(x, y, marker='o', linestyle='-')
-    plt.xlabel('Fraction of Predicted Nodes/#of operations')
-    plt.ylabel('Error')
-    plt.title('# of operations vs Error Graph')
-    plt.grid(True)
-    plt.show()
 
 
 def main(fraction):
