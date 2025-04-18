@@ -36,12 +36,20 @@ def plot_error_graph(fraction, errors_to_plot, file_name):
     numbers_in_filename = re.findall(r'\d+\.?\d*', file_name)
     total_number_of_nodes_in_graph = str(numbers_in_filename[0])
 
+    x = [element * int(total_number_of_nodes_in_graph) for element in x]
+
     # print(type(x), type(y))
     # exit(0)
 
     plt.figure()
     plt.plot(x, y, marker='o', linestyle='-')
-    plt.xlabel('Fraction of Predicted Nodes/#of operations')
+
+    # Draw vertical lines from each point to the x-axis and add labels
+    for xi, yi in zip(x, y):
+        plt.vlines(x=xi, ymin=0, ymax=yi, color='gray', linestyle='--', linewidth=0.8)
+        plt.text(int(xi), -0.02 * max(y), f'{xi}', ha='center', va='top', fontsize=8, rotation=90)
+
+    plt.xlabel('Number of Predicted Nodes/#of operations')
     plt.ylabel('Error')
     plt.title('# of operations vs Error Graph | Number of nodes: '+ total_number_of_nodes_in_graph)
     plt.grid(True)

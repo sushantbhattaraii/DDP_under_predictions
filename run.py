@@ -113,7 +113,7 @@ def set_links_for_request(G, T, requesting_node, parent, link_, root):
 def load_graph():
     # graph_name = my_ng.build_graphs()
     # graphml_file = graph_name
-    graphml_file = '.\\graphs\\1024random_diameter24test.edgelist'
+    graphml_file = '.\\graphs\\256random_diameter79test.edgelist'
     G_example = nx.read_graphml(graphml_file)
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
     return G_example
