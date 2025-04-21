@@ -67,15 +67,17 @@ def main(network_file_name, repetitions):
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description="Running the experiment with different fractions of predicted nodes and with different graphs... ")
     p.add_argument(
+        "-n",
         "--network",
         required=True,
         type=str,
         help="The network file name to run an algorithm on (e.g. '256random_diameter71test.edgelist')"
     )
     p.add_argument(
+        "-r",
         "--repetitions",
         default=1,
-        type=str,
+        type=int,
         help="Number of repetitions for the experiment (default: 1)"
     )
     args = p.parse_args()

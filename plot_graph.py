@@ -71,31 +71,27 @@ def plot_error_graph_with_boxplot(fractions, errors, file_name, reps):
     print(groups)
 
     # 2) Compute mean of each group
-    means = [sum(g)/len(g) for g in groups]
-    maxes = [max(g) for g in groups]
-    mins = [min(g) for g in groups]
+    means = np.array([sum(g)/len(g) for g in groups])
+    maxes = np.array([max(g) for g in groups])
+    mins = np.array([min(g) for g in groups])
+
+    print(maxes, mins)
 
     x = fractions
-    mean_y = means
-    max_y = maxes
-    min_y = mins
 
     numbers_in_filename = re.findall(r'\d+\.?\d*', file_name)
     total_number_of_nodes_in_graph = str(numbers_in_filename[0])
 
     x = [element * int(total_number_of_nodes_in_graph) for element in x]
 
-    # print(type(x), type(y))
-    # exit(0)
-
-    yerr  = np.vstack([min_y, max_y])
+    yerr  = np.vstack([means - mins, maxes - means])
     plt.figure()
     # plt.plot(x, mean_y, marker='o', linestyle='-')
     # plt.plot(x, max_y, marker='o', linestyle='-')
     # plt.plot(x, min_y, marker='o', linestyle='-')
 
     plt.errorbar(
-    x, mean_y,
+    x, means,
     yerr=yerr,
     fmt='-s',          # line + square marker
     color='C1',        # pick a single color
@@ -106,9 +102,9 @@ def plot_error_graph_with_boxplot(fractions, errors, file_name, reps):
 )
 
     # Draw vertical lines from each point to the x-axis and add labels
-    for xi, yi in zip(x, mean_y):
+    for xi, yi in zip(x, means):
         plt.vlines(x=xi, ymin=0, ymax=yi, color='gray', linestyle='--', linewidth=0.8)
-        plt.text(int(xi), -0.02 * max(mean_y), f'{xi}', ha='center', va='top', fontsize=8, rotation=90)
+        plt.text(int(xi), -0.02 * max(means), f'{xi}', ha='center', va='top', fontsize=8, rotation=90)
 
     plt.xlabel('Number of Predicted Nodes/#of operations')
     plt.ylabel('Error')
