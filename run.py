@@ -6,6 +6,7 @@ import networkx as nx
 import network_generator as my_ng
 import argparse
 import matplotlib.pyplot as plt
+import os
 
 
 request_queue = defaultdict(deque)
@@ -110,10 +111,8 @@ def set_links_for_request(G, T, requesting_node, parent, link_, root):
 
     return dist_u_v_in_G, dist_u_v_in_T
 
-def load_graph():
-    # graph_name = my_ng.build_graphs()
-    # graphml_file = graph_name
-    graphml_file = '.\\graphs\\256random_diameter79test.edgelist'
+def load_graph(network_file_name):
+    graphml_file = os.path.join('graphs', str(network_file_name))
     G_example = nx.read_graphml(graphml_file)
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
     return G_example
@@ -207,9 +206,9 @@ def calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T):
     return total_error
 
 
-def main(fraction):
+def main(fraction, network_file_name):
 
-    G_example = load_graph()
+    G_example = load_graph(network_file_name)
 
     # show_graph(G_example)
 
@@ -256,8 +255,14 @@ if __name__ == "__main__":
         required=True,
         help="The fraction of nodes to pick as Vp (e.g. 0.0625, 0.125, 0.25, 0.5)"
     )
+    p.add_argument(
+        "--network",
+        required=True,
+        type=str,
+        help="The network file name to run an algorithm on(e.g. '256random_diameter71test.edgelist')"
+    )
     args = p.parse_args()
-    main(args.fraction)
+    main(args.fraction, args.network)
 
     
 
