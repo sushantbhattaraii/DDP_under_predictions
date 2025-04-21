@@ -7,6 +7,7 @@ import re
 
 def main(network_file_name, repetitions):
     errors = []
+    stretches = []
     for rep in range(repetitions):
         # The four fraction values
         fractions = [1/32, 1/16, 1/8, 1/4, 1/2]
@@ -19,6 +20,10 @@ def main(network_file_name, repetitions):
 
         pattern2 = re.compile(
             r"Total \# of vertices \(n\):\s*([0-9.+\-eE]+)"
+        )
+
+        pattern3 = re.compile(
+            r"Stretch \(sum_of_distance_in_T / sum_of_distance_in_G\) =\s*([0-9.+\-eE]+)"
         )
 
         for frac in fractions:
@@ -38,16 +43,20 @@ def main(network_file_name, repetitions):
                 captured += line
                 m = pattern.search(line)
                 m2 = pattern2.search(line)
+                m3 = pattern3.search(line)
                 if m:
                     error_value = float(m.group(1))
                 if m2:
                     num_nodes = int(m2.group(1))
+                if m3:
+                    stretch_value = float(m3.group(1))
             
             proc.wait()
             if proc.returncode != 0:
                 raise subprocess.CalledProcessError(proc.returncode, proc.args)
 
             errors.append(error_value)
+            stretches.append(stretch_value)
             nodes_count.append(num_nodes)
 
 
@@ -60,9 +69,9 @@ def main(network_file_name, repetitions):
 
     print("Plotting the error graph...")
 
-    filename = str(nodes_count[0])+"nodes_diameter"+str(diameter_value)+"_error_graph-repetitions-"+str(repetitions)+ ".png"
+    filename = str(nodes_count[0])+"nodes_diameter"+str(diameter_value)+"_error_and_stretch_graph-repetitions-"+str(repetitions)+ ".png"
 
-    plot_error_graph_with_boxplot(fractions, errors, filename, repetitions)
+    plot_error_and_stretch_graph_with_boxplot(fractions, errors, filename, repetitions, stretches)
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description="Running the experiment with different fractions of predicted nodes and with different graphs... ")
