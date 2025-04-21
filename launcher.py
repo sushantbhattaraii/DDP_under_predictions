@@ -3,9 +3,9 @@ import subprocess
 from plot_graph import *
 import argparse
 import os
+import re
 
-def main(network_file_name):
-    repetitions = 1
+def main(network_file_name, repetitions):
     errors = []
     for rep in range(repetitions):
         # The four fraction values
@@ -51,9 +51,16 @@ def main(network_file_name):
             nodes_count.append(num_nodes)
 
 
+    # Searching for the diameter of the graph from its filename
+    m3 = re.search(r"diameter(\d+)", str(network_file_name))
+    if m:
+        diameter_value = m3.group(1)   # this is the string "48"
+
+    
+
     print("Plotting the error graph...")
 
-    filename = str(nodes_count[0])+"nodes_error_graph-repetitions-"+str(repetitions)+ ".png"
+    filename = str(nodes_count[0])+"nodes_diameter"+str(diameter_value)+"_error_graph-repetitions-"+str(repetitions)+ ".png"
 
     plot_error_graph_with_boxplot(fractions, errors, filename, repetitions)
 
@@ -65,5 +72,11 @@ if __name__ == "__main__":
         type=str,
         help="The network file name to run an algorithm on (e.g. '256random_diameter71test.edgelist')"
     )
+    p.add_argument(
+        "--repetitions",
+        default=1,
+        type=str,
+        help="Number of repetitions for the experiment (default: 1)"
+    )
     args = p.parse_args()
-    main(args.network)
+    main(args.network, args.repetitions)
