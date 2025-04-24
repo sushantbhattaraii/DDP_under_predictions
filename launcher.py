@@ -5,7 +5,7 @@ import argparse
 import os
 import re
 
-def main(network_file_name, repetitions):
+def main(network_file_name, repetitions, error_cutoff):
     errors = []
     stretches = []
     for rep in range(repetitions):
@@ -29,7 +29,7 @@ def main(network_file_name, repetitions):
         for frac in fractions:
             print(f"\n=== Running run.py with --fraction {frac:.6f}  and Iteration {rep} ===")
             proc = subprocess.Popen(
-                ["python", "run.py", "--fraction", str(frac), "--network", str(network_file_name)],
+                ["python", "run.py", "--fraction", str(frac), "--network", str(network_file_name), "--cutoff", str(error_cutoff)],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True
@@ -69,9 +69,9 @@ def main(network_file_name, repetitions):
 
     print("Plotting the error graph...")
 
-    filename = str(nodes_count[0])+"nodes_diameter"+str(diameter_value)+"_error_and_stretch_graph-repetitions-"+str(repetitions)+ ".png"
+    filename = str(nodes_count[0])+"nodes_diameter"+str(diameter_value)+"_cutoff"+str(error_cutoff)+"-repetitions"+str(repetitions)+ ".png"
 
-    plot_error_and_stretch_graph_with_boxplot(fractions, errors, filename, repetitions, stretches)
+    plot_error_and_stretch_graph_with_boxplot(fractions, errors, filename, repetitions, stretches, error_cutoff)
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description="Running the experiment with different fractions of predicted nodes and with different graphs... ")
@@ -89,5 +89,12 @@ if __name__ == "__main__":
         type=int,
         help="Number of repetitions for the experiment (default: 1)"
     )
+    p.add_argument(
+        "-c",
+        "--cutoff",
+        default=1.0,
+        type=float,
+        help="Cutoff parameter for the error value (implies the error value cannot go beyond this cutoff)"
+    )
     args = p.parse_args()
-    main(args.network, args.repetitions)
+    main(args.network, args.repetitions, args.cutoff)

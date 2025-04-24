@@ -117,15 +117,60 @@ def load_graph(network_file_name):
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
     return G_example
 
+def sample_Q_within_diameter(G, Vp, error_cutoff):
+    diam = nx.diameter(G, weight='weight')
+    Q = []
+    nodes = list(G.nodes())
 
-def calculate_stretch(G_example, T, Vp, fraction, owner):
+    # for v in Vp:
+    #     while True:
+    #         u = random.choice(nodes)
+    #         # first check there is a path
+    #         if nx.has_path(G, v, u):
+    #             if nx.shortest_path_length(G, v, u) <= float(diam/error_cutoff):
+    #                 Q.append(u)
+    #                 break
+    # diam = nx.diameter(G)
+    # Q = []
+    distances = []
+    for v in Vp:
+        dist_map = nx.single_source_dijkstra_path_length(G, v, cutoff=float(diam/error_cutoff), weight="weight")
+        Q.append(random.choice(list(dist_map.keys())))
+
+    # print("Diameter of G is:", diam)
+    # print("1/2*Diameter of G is:", diam/2)
+
+    # for v, u in zip(Vp, Q):
+    #     if not G.has_node(v) or not G.has_node(u):
+    #         d = None
+    #         print(f"One of the nodes {v} or {u} isn’t in G.")
+    #     elif nx.has_path(G, v, u):
+    #         d = nx.shortest_path_length(G, v, u, weight='weight')
+    #     else:
+    #         d = float('inf')   # or some sentinel for “no path”
+    #     distances.append(d)
+
+    # print("Distances from Vp to Q are:", distances)
+
+    return Q
+
+
+def calculate_stretch(G_example, T, Vp, fraction, owner, error_cutoff):
     # V is the set of all vertices in the graph G.
+    # print("type of vp is", type(Vp))
     V = list(T.nodes())
 
     # Requesting nodes Q: randomly select 1/4th of V with the same cardinality as Vp,
     # also ensuring they do not include the owner.
-    available_for_Q = list(set(V) - {owner})
-    Q = random.sample(available_for_Q, len(Vp))
+    # available_for_Q = list(set(V) - {owner})
+    # Q = random.sample(available_for_Q, len(Vp))
+
+    Q = sample_Q_within_diameter(G_example, Vp, error_cutoff)
+
+
+    print("Q nodes are:")
+    # print(Q)
+    # exit(0)
 
     print("Total # of vertices (n): ", len(V))
     print("Total vertices (V):", V)
@@ -206,7 +251,7 @@ def calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T):
     return total_error
 
 
-def main(fraction, network_file_name):
+def main(fraction, network_file_name, error_cutoff):
 
     G_example = load_graph(network_file_name)
 
@@ -237,7 +282,7 @@ def main(fraction, network_file_name):
 
     # show_graph(T)
 
-    Q = calculate_stretch(G_example, T, Vp, fraction, owner)
+    Q = calculate_stretch(G_example, T, Vp, fraction, owner, error_cutoff)
 
     diameter_of_T = nx.diameter(T, weight='weight')
 
@@ -261,8 +306,16 @@ if __name__ == "__main__":
         type=str,
         help="The network file name to run an algorithm on(e.g. '256random_diameter71test.edgelist')"
     )
+
+    p.add_argument(
+        "-c",
+        "--cutoff",
+        default=1.0,
+        type=float,
+        help="Cutoff parameter for the error value (implies the error value cannot go beyond this cutoff)"
+    )
     args = p.parse_args()
-    main(args.fraction, args.network)
+    main(args.fraction, args.network, args.cutoff)
 
     
 

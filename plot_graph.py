@@ -63,7 +63,7 @@ def plot_error_graph(fraction, errors_to_plot, file_name):
     plt.show()
 
 
-def plot_error_and_stretch_graph_with_boxplot(fractions, errors, file_name, reps, stretches):
+def plot_error_and_stretch_graph_with_boxplot(fractions, errors, file_name, reps, stretches, error_cutoff):
     n_groups = len(fractions)
 
     # 1) Group by taking every 5th element, starting at offsets 0–4
@@ -98,7 +98,7 @@ def plot_error_and_stretch_graph_with_boxplot(fractions, errors, file_name, reps
 
     yerr  = np.vstack([means - mins, maxes - means])
     yerr2  = np.vstack([means_stretch - mins_stretch, maxes_stretch - means_stretch])
-    plt.figure()
+    plt.figure(figsize=(14, 10))
     # plt.plot(x, mean_y, marker='o', linestyle='-')
     # plt.plot(x, max_y, marker='o', linestyle='-')
     # plt.plot(x, min_y, marker='o', linestyle='-')
@@ -141,12 +141,14 @@ def plot_error_and_stretch_graph_with_boxplot(fractions, errors, file_name, reps
 
     plt.xlabel('Number of Predicted Nodes/ # of operations')
     plt.ylabel('Error and Stretch')
-    plt.title('# of operations vs Error/Stretch Graph | # of nodes: '+ total_number_of_nodes_in_graph + ' | Reps: ' + str(reps))
+    plt.title('# of operations vs Error/Stretch Graph | # of nodes: '+ total_number_of_nodes_in_graph + ' | Reps: ' + str(reps) + ' | Error ≤: ' + str(float(1/error_cutoff)))
     plt.grid(True)
     folder_name = "results"
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
-    path_to_save = os.path.join('results', 'error_and_stretch_graphs', file_name)
+    # path_to_save = os.path.join('results', 'error_and_stretch_graphs', file_name)
+    folder2 = "error_and_stretch_graphs_with_cutoff"
+    path_to_save = os.path.join('results', folder2, file_name)
     plt.legend(loc='best')
     plt.savefig(path_to_save)
-    plt.show()
+    # plt.show()

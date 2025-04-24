@@ -13,14 +13,35 @@
 import matplotlib.pyplot as plt
 
 # Example data for x and y axes
-x = [1, 2, 3, 4, 5]
-y = [2, 4, 1, 8, 7]
+# x = [1, 2, 3, 4, 5]
+# y = [2, 4, 1, 8, 7]
 
-plt.figure()
-plt.plot(x, y, marker='o', linestyle='-')
-plt.xlabel('X-axis label')
-plt.ylabel('Y-axis label')
-plt.title('Sample 2D Plot')
-plt.grid(True)
-plt.show()
+# plt.figure()
+# plt.plot(x, y, marker='o', linestyle='-')
+# plt.xlabel('X-axis label')
+# plt.ylabel('Y-axis label')
+# plt.title('Sample 2D Plot')
+# plt.grid(True)
+# plt.show()
+
+
+
+# import networkx as nx
+
+# G = nx.read_graphml(".\\graphs\\256random_diameter71test.edgelist")
+
+# # Gather all data‐keys present on edges
+# edge_keys = {
+#     k
+#     for u, v, data in G.edges(data=True)
+#     for k in data.keys()
+# }
+
+# if "weight" in edge_keys:
+#     print("✓ Found an edge attribute named 'weight'")
+# else:
+#     print("✗ No 'weight' attribute on any edge")
+    
+# # (you can also print edge_keys to see other attributes)
+# print("All edge attributes:", edge_keys)
 

@@ -79,7 +79,7 @@ def steiner_tree(G, steiner_vertices):
 
 def choose_steiner_set(G, fraction):
     """
-    Randomly choose Vp (1/4 of all nodes) as predicted nodes,
+    Randomly choose Vp ('fraction' of all nodes) as predicted nodes,
     and then choose one additional 'owner' node not in Vp.
     Return the set S = Vp ∪ {owner}, along with Vp and owner.
     """
