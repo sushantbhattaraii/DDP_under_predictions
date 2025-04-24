@@ -4,6 +4,7 @@ from plot_graph import *
 import argparse
 import os
 import re
+from fractions import Fraction
 
 def main(network_file_name, repetitions, error_cutoff):
     errors = []

@@ -7,6 +7,8 @@ import network_generator as my_ng
 import argparse
 import matplotlib.pyplot as plt
 import os
+from fractions import Fraction
+
 
 
 request_queue = defaultdict(deque)
