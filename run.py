@@ -153,22 +153,22 @@ def sample_Q_within_diameter_with_overlap(G, Vp, error_cutoff, overlap):
         extra_dups = sum(cnt for cnt in dup_counts.values())
         current_overlap = extra_dups / len(Q) * 100
 
-        if dup_counts:
-            print("Duplicate elements in Q and their counts:")
-            for element, count in dup_counts.items():
-                print(f"{element}: {count}")
-        else:
-            print("No duplicate elements found.")
+        # if dup_counts:
+        #     print("Duplicate elements in Q and their counts:")
+        #     for element, count in dup_counts.items():
+        #         print(f"{element}: {count}")
+        # else:
+        #     print("No duplicate elements found.")
 
-        print("Extra dups: ", extra_dups)
-        print("Current overlap: ", current_overlap)
+        # print("Extra dups: ", extra_dups)
+        # print("Current overlap: ", current_overlap)
 
         # 3) check if within tolerance
         if current_overlap <= overlap:
             return Q
 
-    print(f"Could not reach {overlap}% overlap after {max_iter} tries.")
-    print(f"Last overlap was {current_overlap:.2f}%, duplicates:", dup_counts)
+    # print(f"Could not reach {overlap}% overlap after {max_iter} tries.")
+    # print(f"Last overlap was {current_overlap:.2f}%, duplicates:", dup_counts)
     return Q
 
 def calculate_stretch(G_example, T, Vp, fraction, owner, error_cutoff, overlap):
