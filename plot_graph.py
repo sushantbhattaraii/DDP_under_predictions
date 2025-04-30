@@ -4,6 +4,7 @@ import os
 import re
 import numpy as np
 import math
+import pandas as pd
 
 def show_graph(G):
     # Load the graph from a GraphML file
@@ -63,7 +64,7 @@ def plot_error_graph(fraction, errors_to_plot, file_name):
     plt.show()
 
 
-def plot_error_and_stretch_graph_with_boxplot(fractions, errors, file_name, reps, stretches, error_cutoff):
+def plot_error_and_stretch_graph_with_boxplot(fractions, errors, file_name, reps, stretches, error_cutoff, overlap):
     n_groups = len(fractions)
 
     # 1) Group by taking every 5th element, starting at offsets 0–4
@@ -147,7 +148,8 @@ def plot_error_and_stretch_graph_with_boxplot(fractions, errors, file_name, reps
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
     # path_to_save = os.path.join('results', 'error_and_stretch_graphs', file_name)
-    folder2 = "error_and_stretch_graphs_with_cutoff"
+    folder2 = "error_and_stretch_graphs_with_cutoff_AND_overlap"
+    # folder2 = "error_and_stretch_graphs_with_cutoff"
     path_to_save = os.path.join('results', folder2, file_name)
     plt.legend(loc='best')
     plt.savefig(path_to_save)

@@ -8,6 +8,7 @@ import argparse
 import matplotlib.pyplot as plt
 import os
 from fractions import Fraction
+from collections import Counter
 
 
 
@@ -119,45 +120,58 @@ def load_graph(network_file_name):
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
     return G_example
 
-def sample_Q_within_diameter(G, Vp, error_cutoff):
+
+def count_duplicates(input_list):
+    """
+    Checks for duplicate elements in a list and returns their counts.
+
+    Args:
+        input_list: The list to check for duplicates.
+
+    Returns:
+        A dictionary where keys are the duplicate elements and values are their counts.
+        Returns an empty dictionary if no duplicates are found.
+    """
+    counts = Counter(input_list)
+    duplicates = {element: count for element, count in counts.items() if count > 1}
+    return duplicates
+
+def sample_Q_within_diameter_with_overlap(G, Vp, error_cutoff, overlap):
     diam = nx.diameter(G, weight='weight')
-    Q = []
-    nodes = list(G.nodes())
+    max_iter = 100000  # Maximum number of iterations to avoid infinite loop
 
-    # for v in Vp:
-    #     while True:
-    #         u = random.choice(nodes)
-    #         # first check there is a path
-    #         if nx.has_path(G, v, u):
-    #             if nx.shortest_path_length(G, v, u) <= float(diam/error_cutoff):
-    #                 Q.append(u)
-    #                 break
-    # diam = nx.diameter(G)
-    # Q = []
-    distances = []
-    for v in Vp:
-        dist_map = nx.single_source_dijkstra_path_length(G, v, cutoff=float(diam/error_cutoff), weight="weight")
-        Q.append(random.choice(list(dist_map.keys())))
+    for attempt in range(1, max_iter+1):
+        # 1) sample one random reachable node per v
+        Q = []
+        for v in Vp:
+            dist_map = nx.single_source_dijkstra_path_length(G, v, cutoff=float(diam/error_cutoff), weight="weight")
+            Q.append(random.choice(list(dist_map.keys())))
 
-    # print("Diameter of G is:", diam)
-    # print("1/2*Diameter of G is:", diam/2)
+        # 2) compute overlap
+        dup_counts = count_duplicates(Q)
+        # extra dups = sum of (count - 1) for each duplicated element
+        extra_dups = sum(cnt for cnt in dup_counts.values())
+        current_overlap = extra_dups / len(Q) * 100
 
-    # for v, u in zip(Vp, Q):
-    #     if not G.has_node(v) or not G.has_node(u):
-    #         d = None
-    #         print(f"One of the nodes {v} or {u} isn’t in G.")
-    #     elif nx.has_path(G, v, u):
-    #         d = nx.shortest_path_length(G, v, u, weight='weight')
-    #     else:
-    #         d = float('inf')   # or some sentinel for “no path”
-    #     distances.append(d)
+        if dup_counts:
+            print("Duplicate elements in Q and their counts:")
+            for element, count in dup_counts.items():
+                print(f"{element}: {count}")
+        else:
+            print("No duplicate elements found.")
 
-    # print("Distances from Vp to Q are:", distances)
+        print("Extra dups: ", extra_dups)
+        print("Current overlap: ", current_overlap)
 
+        # 3) check if within tolerance
+        if current_overlap <= overlap:
+            return Q
+
+    print(f"Could not reach {overlap}% overlap after {max_iter} tries.")
+    print(f"Last overlap was {current_overlap:.2f}%, duplicates:", dup_counts)
     return Q
 
-
-def calculate_stretch(G_example, T, Vp, fraction, owner, error_cutoff):
+def calculate_stretch(G_example, T, Vp, fraction, owner, error_cutoff, overlap):
     # V is the set of all vertices in the graph G.
     # print("type of vp is", type(Vp))
     V = list(T.nodes())
@@ -167,12 +181,9 @@ def calculate_stretch(G_example, T, Vp, fraction, owner, error_cutoff):
     # available_for_Q = list(set(V) - {owner})
     # Q = random.sample(available_for_Q, len(Vp))
 
-    Q = sample_Q_within_diameter(G_example, Vp, error_cutoff)
+    Q = sample_Q_within_diameter_with_overlap(G_example, Vp, error_cutoff, overlap)
 
-
-    print("Q nodes are:")
-    # print(Q)
-    # exit(0)
+    print("Selected Q = ", Q)
 
     print("Total # of vertices (n): ", len(V))
     print("Total vertices (V):", V)
@@ -253,7 +264,7 @@ def calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T):
     return total_error
 
 
-def main(fraction, network_file_name, error_cutoff):
+def main(fraction, network_file_name, error_cutoff, overlap):
 
     G_example = load_graph(network_file_name)
 
@@ -283,8 +294,8 @@ def main(fraction, network_file_name, error_cutoff):
     #     print(f"Edge ({u}, {v}) has weight: {weight}")
 
     # show_graph(T)
-
-    Q = calculate_stretch(G_example, T, Vp, fraction, owner, error_cutoff)
+    overlap = int(overlap)
+    Q = calculate_stretch(G_example, T, Vp, fraction, owner, error_cutoff, overlap)
 
     diameter_of_T = nx.diameter(T, weight='weight')
 
@@ -316,8 +327,16 @@ if __name__ == "__main__":
         type=float,
         help="Cutoff parameter for the error value (implies the error value cannot go beyond this cutoff)"
     )
+
+    p.add_argument(
+        "-o",
+        "--overlap",
+        default=0,
+        type=int,
+        help="Overlap of the actual nodes requesting for the object (in percentage)"
+    )
     args = p.parse_args()
-    main(args.fraction, args.network, args.cutoff)
+    main(args.fraction, args.network, args.cutoff, args.overlap)
 
     
 
