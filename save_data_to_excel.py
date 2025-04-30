@@ -48,7 +48,7 @@ def save_error_stretch_to_excel(fractions, errors, stretches, file_name, reps, e
     summary_df = pd.DataFrame(summary_records)
 
     # Ensure output directory exists
-    folder = "results/error_and_stretch_graphs_with_cutoff_AND_overlap"
+    folder = "results/error_and_stretch_data_with_cutoff_AND_overlap"
     os.makedirs(folder, exist_ok=True)
     excel_path = os.path.join(folder, f"{os.path.splitext(file_name)[0]}.xlsx")
 
