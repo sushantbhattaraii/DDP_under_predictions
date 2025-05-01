@@ -13,7 +13,7 @@ def main(network_file_name, repetitions, error_cutoff, overlap):
     stretches = []
     for rep in range(repetitions):
         # The four fraction values
-        fractions = [1/32, 1/16, 1/8, 1/4, 1/2]
+        fractions = [1/2, 1/32, 1/16, 1/8, 1/4, 1/2]
         nodes_count = []
 
 

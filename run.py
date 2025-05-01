@@ -276,11 +276,12 @@ def main(fraction, network_file_name, error_cutoff, overlap):
     print("Diameter of G_example:", diameter_of_G)
 
     S_example, Vp, owner = choose_steiner_set(G_example, fraction)
-    print("Randomly chosen Predicted Vertices (Vp):", Vp)
-    print("Owner node:", owner)
+    # print("Randomly chosen Predicted Vertices (Vp):", Vp)
+    # print("Owner node:", owner)
     # print("Steiner set S:", S_example)
 
     # Compute Steiner tree
+    
     T_H = steiner_tree(G_example, S_example)
 
     # Print edges of the resulting Final tree

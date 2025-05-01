@@ -2,6 +2,7 @@ import networkx as nx
 from matplotlib import pyplot as plt
 import random
 from plot_graph import show_graph
+from run import count_duplicates
 
 
 
@@ -85,16 +86,56 @@ def choose_steiner_set(G, fraction):
     """
     G = nx.relabel_nodes(G, lambda x: int(x))
     nodes = list(G.nodes())
+    random.shuffle(nodes)  # Shuffle the nodes to ensure randomness
     total_nodes = len(nodes)
-    vp_size = total_nodes * fraction # Fraction of nodes to be chosen as Vp
-    Vp = set(random.sample(nodes, int(vp_size)))
-    
+    vp_size = int(total_nodes * fraction) # Fraction of nodes to be chosen as Vp
+    original_Vp = list(random.choices(nodes, k=vp_size))
+    random.shuffle(original_Vp)  # Shuffle Vp to ensure randomness
+    # print("Predicted Vertices (original_Vp):", original_Vp)
+
+    # dup_counts = count_duplicates(original_Vp)
+    # # print("Length of Vp: ",len(original_Vp))
+    # # extra dups = sum of (count - 1) for each duplicated element
+    # extra_dups = sum(cnt for cnt in dup_counts.values())
+
+    # if dup_counts:
+    #     print("Duplicate elements in original_Vp and their counts:")
+    #     for element, count in dup_counts.items():
+    #         print(f"{element}: {count}")
+    # else:
+    #     print("No duplicate elements found.")
+
+    reduced_Vp = set(original_Vp)  # Convert to a set for uniqueness
+
+    # Vp = random.shuffle(Vp)  # Convert to a set for uniqueness
+    # print("Set (reduced_Vp):", reduced_Vp)
+    # print("Length of Set reduced_Vp: ",len(reduced_Vp))
+    # print("Type of Set reduced_Vp:", type(reduced_Vp))
+
+    reduced_Vp = list(reduced_Vp)  # Convert back to a list for indexing
+    random.shuffle(reduced_Vp)  # Shuffle Vp to ensure randomness
+    # print("List (reduced_Vp):", reduced_Vp)
+    # print("Length of List reduced_Vp: ",len(reduced_Vp))
+    # print("Type of list reduced_Vp:", type(reduced_Vp))
+
     # Choose an owner node that is not in Vp
-    remaining = set(nodes) - Vp
+    remaining = set(nodes) - set(reduced_Vp)
     owner = random.choice(list(remaining))
-    
-    S = Vp.union({owner})
-    return S, Vp, owner
+
+    # print ("Owner node:", owner)
+    # print("Type of owner:", type(owner))
+
+    # Insert owner to reduced_Vp list at a random position
+    insert_position = random.randint(0, len(reduced_Vp))
+    reduced_Vp.insert(insert_position, owner)
+    S = reduced_Vp.copy()
+    S = set(S)  # Convert to a set for uniqueness
+    # print("List after inserting owner:", reduced_Vp)
+    # print("Length of List after inserting owner: ",len(reduced_Vp))
+    # print("Type of list after inserting owner:", type(reduced_Vp))
+    # print("Type of original vp:", type(original_Vp))
+    # Returning original_Vp as list, reduced_Vp as list, and owner as integer
+    return S, original_Vp, owner
 
 
 def augment_steiner_tree_with_remaining_vertices(G, T_H):
