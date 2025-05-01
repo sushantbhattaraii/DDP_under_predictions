@@ -169,6 +169,7 @@ def sample_Q_within_diameter_with_overlap(G, Vp, error_cutoff, overlap):
 
     # print(f"Could not reach {overlap}% overlap after {max_iter} tries.")
     # print(f"Last overlap was {current_overlap:.2f}%, duplicates:", dup_counts)
+    random.shuffle(Q)  # Shuffle the list to ensure randomness
     return Q
 
 def calculate_stretch(G_example, T, Vp, fraction, owner, error_cutoff, overlap):
