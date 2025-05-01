@@ -257,11 +257,13 @@ def calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T):
     
     print("Diameter of G:", diameter_of_G)
     print("Diameter of T:", diameter_of_T)
-    total_error = max(errors) if errors else 0
+    total_max_error = max(errors) if errors else 0
+    total_min_error = min(errors) if errors else 0
     RED = "\033[91m"
     RESET = "\033[0m"
-    print(f"{RED}\nOverall error (max_i(distance_in_G / diameter_G)) = {total_error:.4f}{RESET}")
-    return total_error
+    print(f"{RED}\nOverall max error (max_i(distance_in_G / diameter_G)) = {total_max_error:.4f}{RESET}")
+    print(f"{RED}\nOverall min error (min_i(distance_in_G / diameter_G)) = {total_min_error:.4f}{RESET}")
+    return total_max_error, total_min_error
 
 
 def main(fraction, network_file_name, error_cutoff, overlap):
@@ -299,9 +301,9 @@ def main(fraction, network_file_name, error_cutoff, overlap):
 
     diameter_of_T = nx.diameter(T, weight='weight')
 
-    total_error = calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T)
+    total_max_error,  total_min_error = calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T)
 
-    return total_error
+    return total_max_error,  total_min_error
 
 
 if __name__ == "__main__":
