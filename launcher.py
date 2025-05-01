@@ -112,7 +112,7 @@ if __name__ == "__main__":
     p.add_argument(
         "-o",
         "--overlap",
-        default=0,
+        default=100,
         type=int,
         help="Overlap of the actual nodes requesting for the object (in percentage)"
     )
