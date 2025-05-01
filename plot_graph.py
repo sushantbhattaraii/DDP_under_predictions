@@ -148,7 +148,7 @@ def plot_error_and_stretch_graph_with_boxplot(fractions, errors, file_name, reps
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
     # path_to_save = os.path.join('results', 'error_and_stretch_graphs', file_name)
-    folder2 = "error_and_stretch_graphs_with_cutoff_AND_overlap"
+    folder2 = "error_and_stretch_graphs_with_cut-off_AND_overlap"
     # folder2 = "error_and_stretch_graphs_with_cutoff"
     path_to_save = os.path.join('results', folder2, file_name)
     plt.legend(loc='best')

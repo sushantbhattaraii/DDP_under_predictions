@@ -5,10 +5,11 @@ import re
 import numpy as np
 from matplotlib.ticker import MultipleLocator
 from fractions import Fraction
+import os
 
 
 # Gather and sort all 64-node Excel files
-files = sorted(glob.glob('./results/error_and_stretch_data_with_cut-off_AND_overlap/256/overlap25/256nodes_diameter*.xlsx'))
+files = sorted(glob.glob('./results/error_and_stretch_data_with_cut-off_AND_overlap/1024/overlap50/1024nodes_diameter*.xlsx'))
 
 m = re.search(r'(\d+)nodes_', files[0])
 node_count = m.group(1) if m else "?"
@@ -60,14 +61,32 @@ unique_x = sorted(set(all_x))
 plt.xlabel(f'Fraction of predicted nodes among {node_count} nodes (# of operations)')
 plt.ylabel('Error / Stretch')
 plt.title(f'Error/Stretch vs Fraction of nodes (# of operations) in {node_count} Node Graph | Prediction Overlap: {overlap_value}%')
-plt.grid(True)
-
-plt.vlines(x=mean_error.index, ymin=0, ymax=mean_error.values, color='gray', linestyle='--', linewidth=0.8)
+# plt.grid(True)
 
 ax = plt.gca()
 ax.yaxis.set_major_locator(MultipleLocator(0.1))
 ax.set_xticks(unique_x)
 
+
+# y_ticks = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+# for i in range(1, 41):
+#     y_ticks.append(1 + i * 0.1)
+
+# ax.set_yticks(y_ticks)
+# ax.set_ylim(0.0, 4.0)
+
+ymin = min([line.get_ydata().min() for line in ax.get_lines()])
+ymax = max([line.get_ydata().max() for line in ax.get_lines()])
+plt.ylim(ymin - 0.1, ymax + 0.1)  # small padding
+
+
+
 plt.legend(loc='best')
-plt.tight_layout()
+
+
+folder = "6_cutoffs_merged"
+filename = f'{node_count}_nodes_overlap{overlap_value}.png'
+path_to_save = os.path.join('results', folder, filename)
+
+# plt.savefig(path_to_save)
 plt.show()

@@ -45,3 +45,22 @@ import matplotlib.pyplot as plt
 # # (you can also print edge_keys to see other attributes)
 # print("All edge attributes:", edge_keys)
 
+
+import matplotlib.pyplot as plt
+
+# Create the plot
+fig, ax = plt.subplots()
+
+# Set y-ticks
+y_ticks = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+for i in range(1, 41):
+    y_ticks.append(1 + i * 0.1)
+
+ax.set_yticks(y_ticks)
+ax.set_ylim(0.0, 4.0)  # Set y-axis limits to match ticks
+
+# Add a dummy plot to prevent matplotlib from automatically setting the y-ticks
+ax.plot([0], [0], color='white')
+
+# Show the plot
+plt.show()
