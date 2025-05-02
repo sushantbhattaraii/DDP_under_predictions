@@ -227,7 +227,7 @@ if __name__ == "__main__":
     # plt.title("GraphML Graph Visualization")
     # plt.show()
 
-    print("Nodes in G_example:", list(G_example.nodes()))
+    # print("Nodes in G_example:", list(G_example.nodes()))
     G_example = nx.relabel_nodes(G_example, lambda x: int(x))
     # for node in G_example.nodes:
     #     print(f"Node: {node}, Data Type: {type(node)}")
@@ -239,23 +239,23 @@ if __name__ == "__main__":
     
     # Choose the Steiner set S = Vp ∪ {owner}
     S_example, Vp, owner = choose_steiner_set(G_example, 0.25)
-    print("Randomly chosen Predicted Vertices (Vp):", Vp)
-    print("Owner node:", owner)
-    print("Steiner set S:", S_example)
+    # print("Randomly chosen Predicted Vertices (Vp):", Vp)
+    # print("Owner node:", owner)
+    # print("Steiner set S:", S_example)
 
     # Compute Steiner tree
     T_H = steiner_tree(G_example, S_example)
 
     # Print edges of the resulting Final tree
-    print("Final Tree edges:")
-    for (u, v, data) in T_H.edges(data=True):
-        print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")
+    # print("Final Tree edges:")
+    # for (u, v, data) in T_H.edges(data=True):
+    #     print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")
 
     # Compute Final tree T
     T, root = augment_steiner_tree_with_remaining_vertices(G_example, T_H)
     show_graph(T)
 
     # Print edges of the resulting Final tree
-    print("Final Tree edges:")
-    for (u, v, data) in T.edges(data=True):
-        print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")
+    # print("Final Tree edges:")
+    # for (u, v, data) in T.edges(data=True):
+    #     print(f"{u} - {v}, weight = {v['weight'] if isinstance(v, dict) else v}")

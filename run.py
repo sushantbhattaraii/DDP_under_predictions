@@ -184,20 +184,20 @@ def calculate_stretch(G_example, T, Vp, fraction, owner, error_cutoff, overlap):
 
     Q = sample_Q_within_diameter_with_overlap(G_example, Vp, error_cutoff, overlap)
 
-    print("Selected Q = ", Q)
+    # print("Selected Q = ", Q)
 
     print("Total # of vertices (n): ", len(V))
-    print("Total vertices (V):", V)
-    print("Fraction used:", fraction)
-    print("Predicted vertices (Vp):", Vp)
-    print("Requesting nodes (Q):", Q)
-    print("\n--- Move Operations ---")
+    # print("Total vertices (V):", V)
+    # print("Fraction used:", fraction)
+    # print("Predicted vertices (Vp):", Vp)
+    # print("Requesting nodes (Q):", Q)
+    # print("\n--- Move Operations ---")
 
     centers = find_tree_center(T)
     # print("Center(s) of the tree:", centers)
 
     root = centers[0]
-    print("Root node of the final tree T:", root)
+    # print("Root node of the final tree T:", root)
 
     parent = build_parent_dict(T, root)
 
@@ -214,8 +214,8 @@ def calculate_stretch(G_example, T, Vp, fraction, owner, error_cutoff, overlap):
     # Run publish() from owner = 5
     publish(T, owner, root, parent, link_)
     
-    print("\nAfter running publish() from owner")
-    print("Updated link:", link_)
+    # print("\nAfter running publish() from owner")
+    # print("Updated link:", link_)
 
     distances_in_G = []
     distances_in_T = []
@@ -256,8 +256,8 @@ def calculate_error(Q, Vp, G_example, diameter_of_G, diameter_of_T):
         errors.append(error)
         # print(f"\nDistance between request node {req} and predicted node {pred} is {dist}, error = {error:.4f}")
     
-    print("Diameter of G:", diameter_of_G)
-    print("Diameter of T:", diameter_of_T)
+    # print("Diameter of G:", diameter_of_G)
+    # print("Diameter of T:", diameter_of_T)
     total_max_error = max(errors) if errors else 0
     total_min_error = min(errors) if errors else 0
     RED = "\033[91m"
@@ -274,7 +274,7 @@ def main(fraction, network_file_name, error_cutoff, overlap):
     # show_graph(G_example)
 
     diameter_of_G = nx.diameter(G_example, weight='weight')
-    print("Diameter of G_example:", diameter_of_G)
+    # print("Diameter of G_example:", diameter_of_G)
 
     S_example, Vp, owner = choose_steiner_set(G_example, fraction)
     # print("Randomly chosen Predicted Vertices (Vp):", Vp)
