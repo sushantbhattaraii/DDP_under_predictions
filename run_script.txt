@@ -1,0 +1,30 @@
+python launcher.py -n 64random_diameter38test.edgelist
+python launcher.py -n 64random_diameter38test.edgelist -r 50
+python launcher.py -n 64random_diameter38test.edgelist -r 100
+python launcher.py -n 64random_diameter66test.edgelist
+python launcher.py -n 64random_diameter66test.edgelist -r 50
+python launcher.py -n 64random_diameter66test.edgelist -r 100
+python launcher.py -n 128random_diameter104test.edgelist
+python launcher.py -n 128random_diameter104test.edgelist -r 50
+python launcher.py -n 128random_diameter104test.edgelist -r 100
+python launcher.py -n 128random_diameter146test.edgelist
+python launcher.py -n 128random_diameter146test.edgelist -r 50
+python launcher.py -n 128random_diameter146test.edgelist -r 100
+python launcher.py -n 256random_diameter71test.edgelist
+python launcher.py -n 256random_diameter71test.edgelist -r 50
+python launcher.py -n 256random_diameter71test.edgelist -r 100
+python launcher.py -n 256random_diameter79test.edgelist
+python launcher.py -n 256random_diameter79test.edgelist -r 50
+python launcher.py -n 256random_diameter79test.edgelist -r 100
+python launcher.py -n 512random_diameter43test.edgelist
+python launcher.py -n 512random_diameter43test.edgelist -r 50
+python launcher.py -n 512random_diameter43test.edgelist -r 100
+python launcher.py -n 512random_diameter48test.edgelist
+python launcher.py -n 512random_diameter48test.edgelist -r 50
+python launcher.py -n 512random_diameter48test.edgelist -r 100
+python launcher.py -n 1024random_diameter24test.edgelist
+python launcher.py -n 1024random_diameter24test.edgelist -r 50
+python launcher.py -n 1024random_diameter24test.edgelist -r 100
+python launcher.py -n 1024random_diameter30test.edgelist
+python launcher.py -n 1024random_diameter30test.edgelist -r 50
+python launcher.py -n 1024random_diameter30test.edgelist -r 100
